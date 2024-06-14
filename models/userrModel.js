@@ -47,12 +47,12 @@ const addVisit = Joi.object({
 });
 
 const registerSchema = Joi.object({
+  name: Joi.string().required(),
   password: Joi.string().required(),
-  email: Joi.string().required(),
-  phone: Joi.string().required(),
+  email: Joi.string().email().required(),
+  phone: Joi.string().pattern(phoneRegexp).required(),
   group: Joi.string().required(),
-  //  .valid("children", "teens", "yung", "single")
-  //  .default("children"),
+ // verificationCode: Joi.string().required(),
 });
 const loginSchema = Joi.object({
   password: Joi.string().required(),

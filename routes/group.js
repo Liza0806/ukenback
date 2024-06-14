@@ -8,16 +8,16 @@ const upload = require('../middlevares/upload')
 
 
 
-router.post("/groups",  controllers.getAllGroups)
+router.get("/",  controllers.getAllGroups)
 
 router.post("/groups/:id", controllers.getGroupById);
 
-router.put("/groups/:id", validateBody(schemas.updateGroupPriceSchema), controllers.updateGroupPriceSchema);
+// router.put("/groups/:id", validateBody(schemas.updateGroupPriceSchema), controllers.updateGroupPriceSchema);
 
-router.put("/groups/:id", validateBody(schemas.updateGroupSceduleSchema), controllers.updateGroupSceduleSchema);
+// router.put("/groups/:id", validateBody(schemas.updateGroupSceduleSchema), controllers.updateGroupSceduleSchema);
 
-router.post("/verify/:verificationCode", controllers.verifyEmail);
+// router.post("/verify/:verificationCode", controllers.verifyEmail);
 
-router.post("/groups/new", validateBody(schemas.addGroupSchema), controllers.addGroup);
+// router.post("/groups/new", validateBody(schemas.addGroupSchema), controllers.addGroup);
 
 module.exports = router

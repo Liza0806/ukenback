@@ -15,9 +15,9 @@ app.use(cors())
 app.use(express.json())
 
 dotenv.config()
- app.use('/api/user', userRouter)
- app.use('/api/groups', groupRouter)
- app.use('/api/auth', authRouter)
+// app.use('/api/user', userRouter)
+ app.use('/groups/', groupRouter)
+ app.use('/auth/', authRouter)
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })

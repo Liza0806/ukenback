@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-
+const {SECRET_KEY} = process.env;
 
 require('dotenv').config();
 
@@ -11,7 +11,7 @@ const nodemailerConfig = {
     secure: true,
     auth: {
         user: 'lizromanova@ukr.net',
-        pass: META_PASSWORD,
+        pass: SECRET_KEY,
     },
 };
 

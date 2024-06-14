@@ -46,7 +46,7 @@ const register = async (req, res) => {
     const verifyEmail = {
       to: email,
       subject: "Verify email",
-      html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationCode}">Click verify email</a>`
+      html: `<a target="_blank" href="${BASE_URL}/auth/verify/${verificationCode}">Click verify email</a>`
   };
   await sendEmail(verifyEmail);
 
@@ -57,7 +57,7 @@ email: newUser.email,
 password: newUser.password,
 group: newUser.group, 
 phone: newUser.phone,
-avatarURL: newUser.avatar,
+// avatarURL: newUser.avatar,
     });
 };
 
@@ -87,7 +87,7 @@ const verifyEmail = async (req, res) => {
      const verifyEmail = {
         to: email,
         subject: "Verify email",
-        html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${user.verificationToken}">Click verify email</a>`
+        html: `<a target="_blank" href="${BASE_URL}/auth/verify/${user.verificationToken}">Click verify email</a>`
     }
     await sendEmail(verifyEmail);
     
