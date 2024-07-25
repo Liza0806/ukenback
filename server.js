@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const app = require("./app");
 const { DB_HOST } = require("./config");
 
-const PORT = 3200;
+const PORT = 3201;
 mongoose
   .connect(DB_HOST)
   .then(() => {

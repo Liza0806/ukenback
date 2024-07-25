@@ -9,7 +9,7 @@ const { schemas } = require('../models/userrModel')
 
  router.post("/register", validateBody(schemas.registerSchema), controllers.register)
 
-// router.post("/login",validateBody(schemas.loginSchema),controllers.authUser);
+ router.post("/login",validateBody(schemas.loginSchema),controllers.login);
 
 router.get("/current", authentificate, controllers.getCurrent);
 

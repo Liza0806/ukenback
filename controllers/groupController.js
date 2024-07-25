@@ -40,6 +40,7 @@ console.log(groupId)
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 async function updateGroup(id, req) {
   const result = await Group.findByIdAndUpdate(id, req, { new: true });
   if (!result) {
@@ -47,6 +48,8 @@ async function updateGroup(id, req) {
   }
   return result;
 }
+
+
 const updateDailyGroupPayment = async(req, res) => {
   const groupId  = req.params.id; 
   const {newPrice} = req.body;
@@ -70,6 +73,8 @@ const updateDailyGroupPayment = async(req, res) => {
   }
 
 }
+
+
 const updateMonthlyGroupPayment = async(req, res) => {
   const groupId  = req.params.id; 
   const {newPrice} = req.body;
@@ -93,10 +98,46 @@ const updateMonthlyGroupPayment = async(req, res) => {
   }
 
 }
-async function addGroup(req) {
-  const newGroup = await Group.create({ ...req.body });
-  return newContact;
+
+const updateGroupSchedule = async(req, res) => {
+  const groupId  = req.params.id; 
+  const newSchedule = [];
+
+  try{
+      const result = await Group.findOneAndUpdate(
+     { _id: groupId },  
+     {  'schedule': [ newSchedule] },
+     { new: true });
+  if (!result) {
+    throw HttpError(404, "not found");
+  }
+  res.json(result);
+  }
+  catch {
+    console.error('Error updating schedule', error);
+    res.status(500).json({ message: 'Server error' }); 
+  }
+
 }
+
+const addGroup = async (req, res) => {
+  try {
+    const group = await Group.create({ ...req.body });
+
+    res.status(201).json({
+      title: group.title,
+      coachId: group.coachId,
+      payment: group.payment,
+      schedule: group.schedule,
+    });
+  } catch (err) {
+    console.error(err); // Логируйте ошибку для отладки
+    res.status(500).json({ message: 'Server error' });
+    // throw HttpError(500, "Server error"); // Это может быть убрано, если вы уже отправили ответ
+  }
+};
+
+
 
 module.exports = {
   addGroup,
@@ -105,5 +146,6 @@ module.exports = {
   updateGroup,
   getGroupMembers,
   updateDailyGroupPayment,
-  updateMonthlyGroupPayment
+  updateMonthlyGroupPayment,
+  updateGroupSchedule
 };

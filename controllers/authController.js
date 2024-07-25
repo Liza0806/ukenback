@@ -41,8 +41,8 @@ const register = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
     const avatarURL = gravatar.url(email)
     const verificationCode = nanoid()
-    const newUser = await User.create({ ...req.body, password: hashPassword, avatarURL, verificationCode });
-  console.log(verificationCode)
+    const newUser = await User.create({ ...req.body, password: hashPassword, avatarURL, groups, verificationCode });
+    console.log(verificationCode)
     const verifyEmail = {
       to: email,
       subject: "Verify email",
@@ -55,11 +55,29 @@ const register = async (req, res) => {
 name: newUser.name,
 email: newUser.email,
 password: newUser.password,
-group: newUser.group, 
+groups: newUser.groups, 
 phone: newUser.phone,
 // avatarURL: newUser.avatar,
     });
 };
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw HttpError(401, 'Email or password is wrong');
+  }
+  const passwordCompare = await bcrypt.compare(password, user.password);
+    if (!passwordCompare) {
+      throw HttpError(401, 'Email or password is wrong');
+    }
+  
+    const token = jwt.sign({
+      id: user._id,
+    }, SECRET_KEY, { expiresIn: '23h' });
+    await User.findByIdAndUpdate(user._id, { token });
+   console.log(token,'token')
+    res.json({token})
+}
 
 
 const verifyEmail = async (req, res) => {
@@ -73,6 +91,7 @@ const verifyEmail = async (req, res) => {
     res.json({
         message: "Email verify success"
     })
+
   }
   
   const resendVerifyEmail = async (req, res) => {
@@ -99,24 +118,6 @@ const verifyEmail = async (req, res) => {
     const { email } = req.user;
     res.json({ email });
   };
-  const authUser = async (req, res) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-      throw HttpError(401, 'Email or password is wrong');
-    }
-    const passwordCompare = await bcrypt.compare(password, user.password);
-    if (!passwordCompare) {
-      throw HttpError(401, 'Email or password is wrong');
-    }
-    const payload = {
-      id: user._id,
-    };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
-    await User.findByIdAndUpdate(user._id, { token });
-    console.log(token,'token')
-    res.json({token})
-  };
 
 const logout = async (req, res) => {
     const { _id } = req.user;
@@ -128,8 +129,8 @@ module.exports = {
     verifyEmail: ctrlWrapper(verifyEmail),
     resendVerifyEmail: ctrlWrapper(resendVerifyEmail), 
     register: ctrlWrapper(register),
-    authUser: ctrlWrapper(authUser),
     getCurrent: ctrlWrapper(getCurrent),
+    login: ctrlWrapper(login),
     logout: ctrlWrapper(logout),
     updateAvatar: ctrlWrapper(updateAvatar),
   };
