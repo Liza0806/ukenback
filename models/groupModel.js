@@ -13,58 +13,72 @@ const validDays = [
   "saturday",
 ];
 
-const groupSchema = new Schema({
-  title: {
+const scheduleSchema = new Schema({
+  day: {
     type: String,
-    required: [true, "Set name for the group"],
-    default: "children",
-  },
-  payment_for_visit: {
-    type: Number,
     required: true,
-    default: null,
-  },
-  monthly_payment: {
-    type: Number,
-    required: true,
-    default: null,
-  },
-  days: {
-    type: [String],
-    required: true,
-    validate: {
-      validator: function (v) {
-        return v.every((day) => validDays.includes(day));
-      },
-      message: (props) => `${props.value} is not a valid day!`,
-    },
   },
   time: {
     type: String,
     required: true,
-    validate: {
-      validator: function (v) {
-        return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(v);
-      },
-      message: (props) => `${props.value} is not a valid time!`,
-    },
   },
 });
+const paymentSchema = new Schema ({
+  dailyPayment: {
+    type: String,
+    required: false,
+    default: 0
+  },
+  monthlyPayment: {
+    type: String,
+    required: false,
+    default: 0
+  }
+})
+const groupSchema = new Schema({
+  _id: {
+    type: String,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: [true, "Set name for the group"],
+    default: "newGroupTitle",
+  },
+  coachId: {
+    type: String,
+    required: true,
+    default: "Kostya"
+  },
+payment: [paymentSchema],
+schedule: [scheduleSchema],
+});
+
+const scheduleSchemaJoi = Joi.object({
+  day: Joi.string().required(),
+  time: Joi.string().required(),
+});
+const paymentSchemaJoi = Joi.object({
+  dailyPayment: Joi.string().allow('').default('0'),
+  monthlyPayment: Joi.string().allow('').default('0'),
+});
+
 
 const addGroupSchema = Joi.object({
-  title: Joi.string().required(),
-  days: Joi.string().required(),
-  time: Joi.string().valid(),
-  monthly_payment: Joi.number(),
-  payment_for_visit: Joi.number(),
+  _id: Joi.string().required(),
+  title: Joi.string().default('newGroupTitle'),
+  coachId: Joi.string().default('Kostya'),
+  payment: Joi.array().items(paymentSchemaJoi).default([]),
+  schedule: Joi.array().items(scheduleSchemaJoi).default([]),
 });
+
 const updateGroupPriceSchema = Joi.object({
-  monthly_payment: Joi.number(),
-  payment_for_visit: Joi.number(),
+  payment: Joi.array().items(paymentSchemaJoi).default([]),
 });
-const updateGroupSceduleSchema = Joi.object({
-  days: Joi.string().required(),
-  time: Joi.string().valid(),
+
+
+const updateGroupScheduleSchema = Joi.object({
+  schedule: Joi.array().items(scheduleSchemaJoi).default([]),
 });
 
 groupSchema.post("save", handleMongooseError);
@@ -73,7 +87,7 @@ const Group = model("group", groupSchema);
 
 const schemas = {
   addGroupSchema,
-  updateGroupSceduleSchema,
+  updateGroupScheduleSchema,
   updateGroupPriceSchema,
 };
 module.exports = {

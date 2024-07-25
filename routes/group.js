@@ -9,10 +9,10 @@ const upload = require('../middlevares/upload')
 
 
 router.get("/",  controllers.getAllGroups)
-
-router.post("/groups/:id", controllers.getGroupById);
-
-// router.put("/groups/:id", validateBody(schemas.updateGroupPriceSchema), controllers.updateGroupPriceSchema);
+router.get("/:id", controllers.getGroupById);
+router.get('/:id/members', controllers.getGroupMembers)
+router.patch("/:id/d_payment",  controllers.updateDailyGroupPayment);
+router.patch("/:id/m_payment",  controllers.updateMonthlyGroupPayment);
 
 // router.put("/groups/:id", validateBody(schemas.updateGroupSceduleSchema), controllers.updateGroupSceduleSchema);
 
@@ -20,4 +20,4 @@ router.post("/groups/:id", controllers.getGroupById);
 
 // router.post("/groups/new", validateBody(schemas.addGroupSchema), controllers.addGroup);
 
-module.exports = router
+module.exports = router //validateBody(schemas.updateGroupPriceSchema),

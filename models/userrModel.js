@@ -5,7 +5,10 @@ const bcrypt = require("bcrypt");
 const { handleMongooseError } = require("../helpers/handleMongooseError");
 
 const phoneRegexp = /^(\+\d{1,2}\s?)?(\(\d{1,4}\))?[0-9.\-\s]{6,}$/;
-
+const visitSchema = new mongoose.Schema({
+  date: { type: Date, required: true },
+  groupId: { type: String, required: true }
+});
 const userSchema = new Schema(
   {
     name: { type: String, required: true },
@@ -20,8 +23,8 @@ const userSchema = new Schema(
       match: phoneRegexp,
     },
     isAdmin: { type: Boolean, default: false },
-    group: { type: String, required: true },
-    visits: { type: Number, required: true, default: 0 },
+    groups: { type: Array, required: true }, ///
+    visits: [visitSchema],
     token: {
       type: String,
     },
@@ -43,7 +46,8 @@ const userSchema = new Schema(
 userSchema.post("save", handleMongooseError);
 
 const addVisit = Joi.object({
-  visits: Joi.number().required(),
+  date: Joi.date().iso().required(), // Дата в формате ISO 8601
+  groupId: Joi.string().required()
 });
 
 const registerSchema = Joi.object({
@@ -51,7 +55,7 @@ const registerSchema = Joi.object({
   password: Joi.string().required(),
   email: Joi.string().email().required(),
   phone: Joi.string().pattern(phoneRegexp).required(),
-  group: Joi.string().required(),
+  groups: Joi.array().required(),
  // verificationCode: Joi.string().required(),
 });
 const loginSchema = Joi.object({
