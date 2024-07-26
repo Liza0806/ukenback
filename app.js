@@ -5,6 +5,7 @@ const dotenv = require('dotenv')
 const userRouter = require('./routes/user')
 const authRouter = require('./routes/auth')
 const groupRouter = require('./routes/group')
+const eventsRouter = require('./routes/events')
 
 const app = express()
 
@@ -18,7 +19,7 @@ dotenv.config()
 // app.use('/api/user', userRouter)
  app.use('/groups/', groupRouter)
  app.use('/auth/', authRouter)
-
+ app.use('/events/', eventsRouter)
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
 })
