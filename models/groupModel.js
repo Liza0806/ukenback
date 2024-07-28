@@ -46,8 +46,8 @@ const eventSchema = new Schema({
       default: false
   },
   participants: {
-      type: [String], // Массив строк для хранения ID участников
-      required: true
+    type: [{ id: String, name: String }], // Массив объектов для хранения ID и имен участников
+    required: true
   },
   _id: {
     type: String, 

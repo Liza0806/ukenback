@@ -1,6 +1,9 @@
 const { Group } = require("../models/groupModel");
 const { HttpError } = require("../helpers/HttpError");
 const { User } = require("../models/userrModel");
+const { required } = require("joi");
+const {generateEventsForMonth} = require('../plans/nextMonthEvent')
+
 
 const getAllGroups = async (req, res) => {
   try {

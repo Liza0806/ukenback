@@ -7,7 +7,8 @@ const { handleMongooseError } = require("../helpers/handleMongooseError");
 const phoneRegexp = /^(\+\d{1,2}\s?)?(\(\d{1,4}\))?[0-9.\-\s]{6,}$/;
 const visitSchema = new mongoose.Schema({
   date: { type: Date, required: true },
-  groupId: { type: String, required: true }
+  groupId: { type: String, required: true },
+  eventId: { type: String, required: true }
 });
 const userSchema = new Schema(
   {
@@ -44,6 +45,10 @@ const userSchema = new Schema(
       type: String,
       default: null
     },
+    telegramId: {
+     type: Number,
+     required: true
+    }
   },
   { versionKey: false, timestamps: true }
 );
@@ -61,6 +66,7 @@ const registerSchema = Joi.object({
   phone: Joi.string().pattern(phoneRegexp).required(),
   groups: Joi.array().required().default([]),
   token: Joi.string().allow(null),
+  telegramId: Joi.number().required()
 });
  // verificationCode: Joi.string().required(),
 
