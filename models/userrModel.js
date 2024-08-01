@@ -25,6 +25,10 @@ const userSchema = new Schema(
     },
     isAdmin: { type: Boolean, default: false },
     groups: { type: Array, required: true }, ///
+    balance:{
+      type: Number,
+      default: 0
+    }, 
     visits: [visitSchema],
     token: {
       type: String,
@@ -66,7 +70,8 @@ const registerSchema = Joi.object({
   phone: Joi.string().pattern(phoneRegexp).required(),
   groups: Joi.array().required().default([]),
   token: Joi.string().allow(null),
-  telegramId: Joi.number().required()
+  telegramId: Joi.number().required(),
+  balance: Joi.number().default(0)
 });
  // verificationCode: Joi.string().required(),
 
