@@ -4,6 +4,18 @@ const { HttpError } = require("../helpers/HttpError");
 const { User } = require("../models/userrModel");
 const { getGroupMembers } = require("./groupController");
 
+/// получить все тренировки из всех групп
+
+const getEventsFromAllGroups = async () => {
+  const groups = await Group.find({});
+  if (!groups || groups.length === 0) {
+    return [];
+  }
+  
+  return groups.flatMap(group => group.events);
+}
+/// получить все тренировки (обертка)
+
 const getAllEvents = async (req, res) => {
     try {
       const allEvents = await getEventsFromAllGroups();
@@ -14,14 +26,7 @@ const getAllEvents = async (req, res) => {
     }
   }
   
-  const getEventsFromAllGroups = async () => {
-    const groups = await Group.find({});
-    if (!groups || groups.length === 0) {
-      return [];
-    }
-    
-    return groups.flatMap(group => group.events);
-  }
+
   //// isnt work
   const getEventsForLastMonth = async (req, res) => {
     try {
@@ -35,6 +40,9 @@ const getAllEvents = async (req, res) => {
       res.status(500).json({ message: 'Internal Server Error' });
     }
   }
+
+  /// получить все тренировки за сегодня
+
   const getTodaysEvents = async (req, res) => {
     try {
       const today = new Date();
@@ -51,7 +59,9 @@ const getAllEvents = async (req, res) => {
       res.status(500).json({ message: 'Internal Server Error' });
     }
   }
-  ///this one for getEventsForLastMonth
+
+
+  ///this one for getEventsForLastMonth 
   const getLastMonthDateRange = () => {
     const now = new Date();
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -67,6 +77,7 @@ const getAllEvents = async (req, res) => {
     ]);
   }
   
+    /// получить все тренировки  по юзеру
   const getEventsByUser = async (req, res) => {
     const userId = req.params.userId;
   
@@ -85,7 +96,7 @@ const getAllEvents = async (req, res) => {
       res.status(500).json({ message: 'Internal Server Error' });
     }
   }
-
+  /// получить группу по встрече (для getEventById) 
 const getGroupByEventId = async (eventId) => {
   try {
     const group = await Group.findOne({ 'events._id': eventId });
@@ -98,7 +109,8 @@ const getGroupByEventId = async (eventId) => {
     return { error: 'Internal Server Error' };
   }
 }
-
+  /// ОДИНОЧНЫЕ ИВЕНТЫ
+    /// для getEventById
   const getEventFunc = async (eventId) => {
     try {
       const { group, error: groupError } = await getGroupByEventId(eventId);
@@ -118,7 +130,7 @@ const getGroupByEventId = async (eventId) => {
       return { error: 'Internal Server Error' };
     }
   }
-
+/// получить тренировку по ид
   const getEventById = async (req, res) => {
     const { eventId } = req.params;
     const result = await getEventFunc(eventId);
@@ -129,7 +141,7 @@ const getGroupByEventId = async (eventId) => {
   
     return res.json(result.event);
   }
-  
+  /// получить участников тренировки 
 const getOneEventParticipants = async (req, res) => {
   const { eventId } = req.params;
   const result = await getEventFunc(eventId);
@@ -142,11 +154,15 @@ const participants = [...result.event.participants]
   return res.json(result.event.participants);
 }
 
+/// изменить состав участников тренировки (кто был, кто не был)
 const changeOneEventParticipants =  async (req, res) => {
   const participants = req.body;
+  const hipoteticalParticipants = User.find
 
 
 }
+/// добавить статус болел
+/// изменить время 1 тренировки
   // const updateEventDateTime = (event, date, time) => {
   //   if (date && time) {
   //     event.date = formatDateTime(date, time);

@@ -4,7 +4,7 @@ const { User } = require("../models/userrModel");
 const { required } = require("joi");
 const {generateEventsForMonth} = require('../plans/nextMonthEvent')
 
-
+/// Получить все группы
 const getAllGroups = async (req, res) => {
   try {
     const data = await Group.find({});
@@ -15,6 +15,7 @@ const getAllGroups = async (req, res) => {
   }
 };
 
+/// Получить 1 по ид
 const getGroupById = async (req, res) => {
   const groupId = req.params.id; // Получаем ID из параметров запроса
 
@@ -31,6 +32,12 @@ const getGroupById = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve group', error: error.message }); // В случае ошибки сервера вернуть 500
   }
 };
+
+/// Получить членов группы
+
+/// как? мы можем хранить участников в объекте группы отдельным массивом
+/// можем пройтись по ивентам в группе и найти уникальных участников
+/// можем как тут по участникам и вытянуть груп ид из их поля групс
 const getGroupMembers = async (req, res) => {
   const groupId = req.params.id;
 
@@ -177,23 +184,8 @@ const isValidGroupData = ({ title, coachId, payment, schedule }) => {
          Array.isArray(schedule);
 };
 
-
-// const updateGroupSchedule = async (req, res) => {
-//   const groupId = req.params.id; // Получаем ID из параметров запроса
-//   console.log(groupId)
-//     try {
-//       const group = await Group.findById({_id: groupId}); // Найти группу по ID
-//       const { schedule } = req.body;
-//       if (!group) {
-//         return res.status(404).json({ message: 'Group not found' }); // Если группа не найдена, вернуть 404
-//       }
-//   group.schedule = [...schedule]
-//       res.status(200).json(group); 
-//     } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ message: 'Server error' }); // В случае ошибки сервера вернуть 500
-//     }
-// }
+/// добавить участника и удалить участника
+/// поиск по участникам
 
 module.exports = {
   addGroup,
