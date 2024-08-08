@@ -10,8 +10,7 @@ const getAllGroups = async (req, res) => {
     const data = await Group.find({});
     res.json(data); // Статус 200 по умолчанию
   } catch (error) {
-    console.error('Error retrieving groups:', error);
-    res.status(500).json({ message: "Failed to retrieve groups", error: error.message });
+    HttpError(500, `Failed to retrieve groups ${error.message}`)
   }
 };
 
@@ -23,21 +22,17 @@ const getGroupById = async (req, res) => {
     const group = await Group.findById(groupId); // Найти группу по ID
 
     if (!group) {
-      return res.status(404).json({ message: 'Group not found' }); // Если группа не найдена, вернуть 404
+      return HttpError(404, 'Group not found')
     }
 
     res.json(group); 
   } catch (error) {
-    console.error('Error retrieving group by ID:', error);
-    res.status(500).json({ message: 'Failed to retrieve group', error: error.message }); // В случае ошибки сервера вернуть 500
+    HttpError(500, `Failed to retrieve group ${error.message}`)
   }
 };
 
 /// Получить членов группы
 
-/// как? мы можем хранить участников в объекте группы отдельным массивом
-/// можем пройтись по ивентам в группе и найти уникальных участников
-/// можем как тут по участникам и вытянуть груп ид из их поля групс
 const getGroupMembers = async (req, res) => {
   const groupId = req.params.id;
 
@@ -45,26 +40,16 @@ const getGroupMembers = async (req, res) => {
     const members = await User.find({ groups: groupId });
     res.json(members); // Статус 200 по умолчанию
   } catch (error) {
-    console.error('Error retrieving group members:', error);
-    res.status(500).json({ message: 'Failed to retrieve group members', error: error.message });
+    HttpError(500, `Failed to retrieve group members ${error.message}`)
   }
 };
-
-
-// async function updateGroup(id, req) {
-//   const result = await Group.findByIdAndUpdate(id, req, { new: true });
-//   if (!result) {
-//     throw HttpError(404, "not found");
-//   }
-//   return result;
-// }
 
 const updateDailyGroupPayment = async (req, res) => {
   const groupId = req.params.id; 
   const { newPrice } = req.body;
 
   if (typeof newPrice !== 'number' || newPrice <= 0) {
-    return res.status(400).json({ message: 'Invalid price value' });
+    return HttpError(400,'Invalid price value')
   }
 
   try {
@@ -75,42 +60,40 @@ const updateDailyGroupPayment = async (req, res) => {
     );
 
     if (!result) {
-      return res.status(404).json({ message: 'Group not found' });
+      return HttpError(404, 'Group not found')
     }
-
     res.json(result);
-  } catch (error) {
-    console.error('Error updating daily group payment:', error);
-    res.status(500).json({ message: 'Server error', error: error.message }); 
+   
   }
+catch{
+  return HttpError(500, `Server error ${error.message}`)
+}
 };
-// {
-//   "newPrice": 555
-// }
+
 
 const updateMonthlyGroupPayment = async (req, res) => {
   const groupId = req.params.id; 
   const { newPrice } = req.body;
 
-  if (!isValidPrice(newPrice)) {
-    return res.status(400).json({ message: 'Invalid price value' });
-  }
+  const isValidPrice = (price) => typeof price === 'number' && price > 0;
 
+  if (!isValidPrice(newPrice)) {
+    return HttpError(400,  'Invalid price value' )
+  }
   try {
     const result = await updateGroupPayment(groupId, newPrice);
 
     if (!result) {
-      return res.status(404).json({ message: 'Group not found' });
+      return HttpError(404)
     }
 
     res.json(result);
   } catch (error) {
-    console.error('Error updating monthly payment group price:', error);
-    res.status(500).json({ message: 'Server error' }); 
+    HttpError(500, `Server error ${error.message}`)
   }
 }
 
-const isValidPrice = (price) => typeof price === 'number' && price > 0;
+
 
 const updateGroupPayment = async (groupId, newPrice) => {
   return Group.findOneAndUpdate(
@@ -191,7 +174,6 @@ module.exports = {
   addGroup,
   getAllGroups,
   getGroupById,
-
   getGroupMembers,
   updateDailyGroupPayment,
   updateMonthlyGroupPayment,

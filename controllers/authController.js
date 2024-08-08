@@ -16,21 +16,21 @@ require('dotenv').config();
 const {SECRET_KEY} = process.env;
 const {BASE_URL} = process.env;
 
-const updateAvatar = async(req, res) => {
-    const {_id} = req.user
-    const {path: tempUpload, originalname} = req.file
-    const filename = `${_id}_${originalname}`
-    const resultUpload = path.join(avatarDir, filename)
-    await fs.rename(tempUpload, resultUpload)
-    const avatarURL = path.join("avatars", filename)
+// const updateAvatar = async(req, res) => {
+//     const {_id} = req.user
+//     const {path: tempUpload, originalname} = req.file
+//     const filename = `${_id}_${originalname}`
+//     const resultUpload = path.join(avatarDir, filename)
+//     await fs.rename(tempUpload, resultUpload)
+//     const avatarURL = path.join("avatars", filename)
   
    
-    await User.findByIdAndUpdate(_id, {avatarURL})
+//     await User.findByIdAndUpdate(_id, {avatarURL})
   
-    res.json({
-      avatarURL
-    })
-  } 
+//     res.json({
+//       avatarURL
+//     })
+//   } 
 
 const register = async (req, res) => {
     const { email, password } = req.body;
@@ -126,11 +126,11 @@ const logout = async (req, res) => {
   };
 
 module.exports = {
-    verifyEmail: ctrlWrapper(verifyEmail),
-    resendVerifyEmail: ctrlWrapper(resendVerifyEmail), 
+  //  verifyEmail: ctrlWrapper(verifyEmail),
+  //  resendVerifyEmail: ctrlWrapper(resendVerifyEmail), 
     register: ctrlWrapper(register),
     getCurrent: ctrlWrapper(getCurrent),
     login: ctrlWrapper(login),
     logout: ctrlWrapper(logout),
-    updateAvatar: ctrlWrapper(updateAvatar),
+  //  updateAvatar: ctrlWrapper(updateAvatar),
   };

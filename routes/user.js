@@ -7,3 +7,15 @@ const controllers =require('../controllers/userController')
 // const upload = require('../middlevares/upload')
 
 //router.patch("/:id/d_payment",  controllers.updateDailyGroupPayment);
+
+
+router.get('/', controllers.getAllUsers)
+router.get('/:id', controllers.getUserById)
+
+// 
+// router.delete('/:id', controllers.deleteOneUser)
+// router.get('/events', controllers.getOneUserEvents)
+// router.patch('/discount', controllers.changeDiscountOnUser)
+
+
+module.exports = router 

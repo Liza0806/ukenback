@@ -13,11 +13,6 @@ const visitSchema = new mongoose.Schema({
 const userSchema = new Schema(
   {
     name: { type: String, required: true },
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-    },
     password: { type: String, required: [true, "Set password for user"] },
     phone: {
       type: String,
@@ -29,14 +24,11 @@ const userSchema = new Schema(
       type: Number,
       default: 0
     }, 
+    discount: {
+      type: Number,
+      default: 0
+    },
     visits: [visitSchema],
-    token: {
-      type: String,
-    },
-    avatarURL: {
-      type: String,
-      required: false,
-    },
     verify: {
       type: Boolean,
       default: false,

@@ -9,7 +9,8 @@ const isAdmin = require('../middlevares/isAdmin')
 
 router.get("/",  controllers.getAllGroups)
 router.get("/:id", controllers.getGroupById);
-router.get('/:id/members', controllers.getGroupMembers)
+router.get('/:id/participants', controllers.getGroupMembers);
+
 router.patch("/:id/d_payment",  controllers.updateDailyGroupPayment);
 router.patch("/:id/m_payment",  controllers.updateMonthlyGroupPayment); // добавь схемы и мидлвары сюда и выше
 router.patch("/:id/schedule",  controllers.updateGroupSchedule);

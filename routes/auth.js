@@ -17,8 +17,8 @@ router.get("/current", authentificate, controllers.getCurrent);
 
 // router.put("/avatars", authentificate, upload.single('avatar'), controllers.updateAvatar)
 
-router.get("/verify/:verificationCode", controllers.verifyEmail);
+// router.get("/verify/:verificationCode", controllers.verifyEmail);
 
-router.post("/verify", validateBody(schemas.emailSchema), controllers.resendVerifyEmail);
+// router.post("/verify", validateBody(schemas.emailSchema), controllers.resendVerifyEmail);
 
 module.exports = router

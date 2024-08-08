@@ -1,10 +1,27 @@
 const { User } = require("../models/userrModel");
 const { HttpError } = require("../helpers/HttpError");
 
-
-async function getUserById(id) {
-  // const result = await User.findOne({ _id: id });
-  // return result;
+const getAllUsers = async (req, res) => {
+ const users = await User.find({})
+ if (!users || users.length === 0) {
+  return [];
+}
+res.json(users)
+}
+ 
+const getUserById = async (req, res) => {
+  const { id } = req.params; 
+  try {
+  const user = await User.find({_id: id})
+  if (!user) {
+    HttpError(404, 'Group not found')
+  }
+  res.json(user);
+}
+  catch (error) {
+    HttpError(500, `Failed to retrieve user ${error.message}`)
+  }
+  
 }
 
 async function removeUser(id) {
@@ -23,6 +40,7 @@ async function addVisit(id) {
 //     // visits: Joi.number().required(),
 //   });
 module.exports = {
+  getAllUsers,
     getUserById,
     removeUser,
     addVisit

@@ -12,7 +12,7 @@ const getEventsFromAllGroups = async () => {
     return [];
   }
   
-  return groups.flatMap(group => group.events);
+  return groups.flatMap(group => group.events);  
 }
 /// получить все тренировки (обертка)
 
@@ -21,8 +21,7 @@ const getAllEvents = async (req, res) => {
       const allEvents = await getEventsFromAllGroups();
       res.json(allEvents);
     } catch (error) {
-      console.error('Error retrieving events:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      return HttpError(500, `Error retrieving events: ${error.message}`) // настроить выдачу группами
     }
   }
   
@@ -36,8 +35,7 @@ const getAllEvents = async (req, res) => {
   
       res.json(events);
     } catch (error) {
-      console.error('Error retrieving events for the last month:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      return HttpError(500, `Internal Server Error, ${error.message}`)
     }
   }
 
@@ -46,17 +44,14 @@ const getAllEvents = async (req, res) => {
   const getTodaysEvents = async (req, res) => {
     try {
       const today = new Date();
-      // время на начало дня
       const startDate = new Date(today.setHours(0, 0, 0, 0));
-      //на конец дня
       const endDate = new Date(today.setHours(23, 59, 59, 999));
   
       const events = await getEventsByDateRange(startDate, endDate);
   
       res.json(events);
     } catch (error) {
-      console.error('Error retrieving events for today:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      return HttpError(500, `Error retrieving events for today:, ${error.message}`)
     }
   }
 
@@ -78,25 +73,31 @@ const getAllEvents = async (req, res) => {
   }
   
     /// получить все тренировки  по юзеру
+    /// ПЕРЕПИШИ это вообще маршрут для юзера, не для ивентов
+  // и поменяй в боте, чтобы он пушил ид с объекта, а не телеграм ид
   const getEventsByUser = async (req, res) => {
-    const userId = req.params.userId;
+  //   const userId = req.params.userId;
   
-    try {
-      const groupsWithUserEvents = await Group.find({
-        'events.participants': userId
-      });
-  
-      const events = groupsWithUserEvents.flatMap(group => 
-        group.events.filter(event => event.participants.includes(userId))
-      );
-  
-      res.json(events);
-    } catch (error) {
-      console.error('Error retrieving events for user:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  }
-  /// получить группу по встрече (для getEventById) 
+  //   try {
+  //     console.log(1)
+  //     const groupsWithUserEvents = await Group.find({
+  //       'events.participants': userId
+  //     });
+  //     console.log(2)
+  //     const events = groupsWithUserEvents.flatMap(group => 
+  //       group.events.filter(event => event.participants.includes(userId))
+  //     );
+  //     console.log(3)
+  //     res.json(events);
+  //     console.log(4)
+  //   } catch (error) {
+  //     return HttpError(500, `Error retrieving events for user:, ${error.message}`)
+  //   }
+   }
+
+  /// ОДИНОЧНЫЕ ИВЕНТЫ
+
+    /// получить группу по встрече (для getEventById) 
 const getGroupByEventId = async (eventId) => {
   try {
     const group = await Group.findOne({ 'events._id': eventId });
@@ -105,11 +106,9 @@ const getGroupByEventId = async (eventId) => {
     }
     return { group };
   } catch (error) {
-    console.error('Error getting group by event ID:', error);
-    return { error: 'Internal Server Error' };
+    return HttpError(500, `Error getting group by event ID:, ${error.message}`)
   }
 }
-  /// ОДИНОЧНЫЕ ИВЕНТЫ
     /// для getEventById
   const getEventFunc = async (eventId) => {
     try {
@@ -126,8 +125,7 @@ const getGroupByEventId = async (eventId) => {
       
       return { event };
     } catch (error) {
-      console.error('Error getting event:', error);
-      return { error: 'Internal Server Error' };
+      return HttpError(500, `Error getting event:, ${error.message}`)
     }
   }
 /// получить тренировку по ид
@@ -136,7 +134,7 @@ const getGroupByEventId = async (eventId) => {
     const result = await getEventFunc(eventId);
   
     if (result.error) {
-      return res.status(404).json({ message: result.error });
+      return HttpError(404, `Error getting event:, ${error.message}`) 
     }
   
     return res.json(result.event);
@@ -147,10 +145,9 @@ const getOneEventParticipants = async (req, res) => {
   const result = await getEventFunc(eventId);
 
   if (result.error) {
-    return res.status(500).json({ message: result.error });
+    return HttpError(500, `Error getting event:, ${error.message}`)
   }
 
-const participants = [...result.event.participants]
   return res.json(result.event.participants);
 }
 
@@ -180,12 +177,12 @@ const changeOneEventParticipants =  async (req, res) => {
     try {
       const group = await Group.findOne({ 'events._id': eventId });
       if (!group) {
-        return res.status(404).json({ message: 'Event not found in any group' });
+        return HttpError(404, `Event not found in any group, ${error.message}`)
       }
   
       const event = group.events.id(eventId);
       if (!event) {
-        return res.status(404).json({ message: 'Event not found in group' });
+        return HttpError(404, `Event not found in group ${error.message}`)
       }
   
       updateEventDateTime(event, date, time);
@@ -194,8 +191,7 @@ const changeOneEventParticipants =  async (req, res) => {
   
       res.json(event);
     } catch (error) {
-      console.error('Error updating event:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      return HttpError(500, `Internal Server Error ${error.message}`)
     }
   }
   
@@ -220,14 +216,7 @@ const changeOneEventParticipants =  async (req, res) => {
     date.setUTCMinutes(minutes);
     return date.toISOString();
   }
-  
 
-
-
-    // {
-    //     "date": "2024-07-26",
-    //     "time": "14:30"
-    // }
   module.exports = {
     getEventsByUser,
     changeOneEventTime,
