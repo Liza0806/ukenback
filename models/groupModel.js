@@ -23,37 +23,20 @@ const scheduleSchema = new Schema({
     required: true,
   },
 });
+
 const paymentSchema = new Schema ({
   dailyPayment: {
-    type: String,
+    type: Number,
     required: false,
     default: 0
   },
   monthlyPayment: {
-    type: String,
+    type: Number,
     required: false,
     default: 0
   }
 })
 
-const eventSchema = new Schema({
-  date: {
-      type: Date,
-      required: true
-  },
-  isCancelled: {
-      type: Boolean,
-      default: false
-  },
-  participants: {
-    type: [{ id: String, name: String }], // Массив объектов для хранения ID и имен участников
-    required: true
-  },
-  _id: {
-    type: String, 
-    required: true
-  }
-});
 const groupSchema = new Schema({
   _id: {
     type: String,
@@ -71,7 +54,6 @@ const groupSchema = new Schema({
   },
 payment: [paymentSchema],
 schedule: [scheduleSchema],
-events: [eventSchema]
 });
 
 const scheduleSchemaJoi = Joi.object({

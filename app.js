@@ -6,6 +6,7 @@ const userRouter = require('./routes/user')
 const authRouter = require('./routes/auth')
 const groupRouter = require('./routes/group')
 const eventsRouter = require('./routes/events')
+const scheduler = require('./scheduler');
 
 const app = express()
 

@@ -16,22 +16,6 @@ require('dotenv').config();
 const {SECRET_KEY} = process.env;
 const {BASE_URL} = process.env;
 
-// const updateAvatar = async(req, res) => {
-//     const {_id} = req.user
-//     const {path: tempUpload, originalname} = req.file
-//     const filename = `${_id}_${originalname}`
-//     const resultUpload = path.join(avatarDir, filename)
-//     await fs.rename(tempUpload, resultUpload)
-//     const avatarURL = path.join("avatars", filename)
-  
-   
-//     await User.findByIdAndUpdate(_id, {avatarURL})
-  
-//     res.json({
-//       avatarURL
-//     })
-//   } 
-
 const register = async (req, res) => {
     const { email, password } = req.body;
     const userExists = await User.findOne({ email }); 
@@ -57,7 +41,6 @@ email: newUser.email,
 password: newUser.password,
 groups: newUser.groups, 
 phone: newUser.phone,
-// avatarURL: newUser.avatar,
     });
 };
 const login = async (req, res) => {
@@ -79,41 +62,6 @@ const login = async (req, res) => {
     res.json({token})
 }
 
-
-const verifyEmail = async (req, res) => {
-    const { verificationToken } = req.params;
-    const user = await User.findOne({ verificationToken });
-    if (!user) {
-        throw HttpError(401, "Email not found");
-  
-    }
-    await User.findByIdAndUpdate(user._id, { verify: true, verificationToken: "" });
-    res.json({
-        message: "Email verify success"
-    })
-
-  }
-  
-  const resendVerifyEmail = async (req, res) => {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-        throw HttpError(401, "Email not found");  
-    }
-    if (user.verify) {
-        throw HttpError(401, "Email already verify");      
-    }
-     const verifyEmail = {
-        to: email,
-        subject: "Verify email",
-        html: `<a target="_blank" href="${BASE_URL}/auth/verify/${user.verificationToken}">Click verify email</a>`
-    }
-    await sendEmail(verifyEmail);
-    
-    res.json({
-        message: "Verify email send success",
-    })
-  }
   const getCurrent = async (req, res) => {
     const { email } = req.user;
     res.json({ email });
@@ -126,11 +74,8 @@ const logout = async (req, res) => {
   };
 
 module.exports = {
-  //  verifyEmail: ctrlWrapper(verifyEmail),
-  //  resendVerifyEmail: ctrlWrapper(resendVerifyEmail), 
     register: ctrlWrapper(register),
     getCurrent: ctrlWrapper(getCurrent),
     login: ctrlWrapper(login),
     logout: ctrlWrapper(logout),
-  //  updateAvatar: ctrlWrapper(updateAvatar),
   };

@@ -19,7 +19,7 @@ const userSchema = new Schema(
       match: phoneRegexp,
     },
     isAdmin: { type: Boolean, default: false },
-    groups: { type: Array, required: true }, ///
+    groups: { type: Array, default: [] }, ///
     balance:{
       type: Number,
       default: 0
@@ -36,10 +36,6 @@ const userSchema = new Schema(
     verificationCode: {
       type: String,
       required: [true, "Verify token is required"],
-    },
-    token: {
-      type: String,
-      default: null
     },
     telegramId: {
      type: Number,
@@ -58,18 +54,15 @@ const addVisit = Joi.object({
 const registerSchema = Joi.object({
   name: Joi.string().required(),
   password: Joi.string().required(),
-  email: Joi.string().email().required(),
   phone: Joi.string().pattern(phoneRegexp).required(),
-  groups: Joi.array().required().default([]),
-  token: Joi.string().allow(null),
+  groups: Joi.array().default([]),
   telegramId: Joi.number().required(),
   balance: Joi.number().default(0)
 });
- // verificationCode: Joi.string().required(),
+
 
 const loginSchema = Joi.object({
   password: Joi.string().required(),
-  email: Joi.string().email().required(),
 });
 
 const schemas = {

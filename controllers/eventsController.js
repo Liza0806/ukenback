@@ -1,25 +1,26 @@
 const { Group } = require("../models/groupModel");
 const { HttpError } = require("../helpers/HttpError");
-//const { Event } = require("../models/eventModel");
+const { Event } = require("../models/eventModel");
 const { User } = require("../models/userrModel");
 const { getGroupMembers } = require("./groupController");
 
 /// получить все тренировки из всех групп
 
-const getEventsFromAllGroups = async () => {
-  const groups = await Group.find({});
-  if (!groups || groups.length === 0) {
-    return [];
+const getAllEvents = async  (req, res)  => {
+  try {
+    const data = await Event.find({});
+    res.json(data); // Статус 200 по умолчанию
+  } catch (error) {
+    HttpError(500, `Failed to retrieve groups ${error.message}`)
   }
-  
-  return groups.flatMap(group => group.events);  
 }
 /// получить все тренировки (обертка)
 
-const getAllEvents = async (req, res) => {
+const getEventsByGroup = async (req, res) => {
+  const {groupId} = req.params
     try {
-      const allEvents = await getEventsFromAllGroups();
-      res.json(allEvents);
+      const events = await Event.find({group: groupId})
+      res.json(events);
     } catch (error) {
       return HttpError(500, `Error retrieving events: ${error.message}`) // настроить выдачу группами
     }
@@ -65,7 +66,7 @@ const getAllEvents = async (req, res) => {
   }
    ///this one for getTodaysEvents
   const getEventsByDateRange = async (startDate, endDate) => {
-    return Group.aggregate([
+    return Event.aggregate([
       { $unwind: '$events' },
       { $match: { 'events.date': { $gte: startDate, $lt: endDate } } },
       { $replaceRoot: { newRoot: '$events' } }
