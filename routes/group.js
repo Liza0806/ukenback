@@ -4,17 +4,13 @@ const validateBody = require('../middlevares/vaidateBody')
 const {schemas} = require('../models/groupModel')
 const controllers =require('../controllers/groupController')
 const upload = require('../middlevares/upload')
-const isAdmin = require('../middlevares/isAdmin')
+// const isAdmin = require('../middlevares/isAdmin')
 
 
 router.get("/",  controllers.getAllGroups)
 router.get("/:id", controllers.getGroupById);
-router.get('/:id/participants', controllers.getGroupMembers);
-
-router.patch("/:id/d_payment",  controllers.updateDailyGroupPayment);
-router.patch("/:id/m_payment",  controllers.updateMonthlyGroupPayment); // добавь схемы и мидлвары сюда и выше
-router.patch("/:id/schedule",  controllers.updateGroupSchedule);
-//// валидация - это хорошо и обязательно
-router.post("/", validateBody(schemas.addGroupSchema), isAdmin, controllers.addGroup);
+ router.post("/", validateBody(schemas.addGroupSchema), controllers.addGroup);
+router.put('/', validateBody(schemas.addGroupSchema), controllers.updateGroup)
+router.delete("/:id", controllers.deleteGroup)
 
 module.exports = router //validateBody(schemas.updateGroupPriceSchema),

@@ -124,6 +124,18 @@ const updateEvent = async (req, res) => {
   }
 };
 
+// {
+//   "_id": "event1_20240925",
+//   "date": "2025-09-25T08:00:00.000Z",
+//   "group": "group4",
+//   "isCancelled": false,
+//   "participants": [
+//     { "id": "user1", "name": "John" },
+//     { "id": "user2", "name": "Jane" }
+//   ]
+// }
+
+
 // удалить
 const deleteEvent = async (req, res) => {
   const { eventId } = req.params;

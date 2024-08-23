@@ -29,14 +29,6 @@ const userSchema = new Schema(
       default: 0
     },
     visits: [visitSchema],
-    verify: {
-      type: Boolean,
-      default: false,
-    },
-    verificationCode: {
-      type: String,
-      required: [true, "Verify token is required"],
-    },
     telegramId: {
      type: Number,
      required: true
@@ -68,6 +60,7 @@ const loginSchema = Joi.object({
 const schemas = {
   registerSchema,
   loginSchema,
+  addVisit
 };
 
 const User = model("user", userSchema);
