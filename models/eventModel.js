@@ -34,6 +34,7 @@ const participantsSchemaJoi = Joi.object({
 });
 
 const addEventSchema = Joi.object({
+    _id: Joi.string().required(),
     date: Joi.date().required(), // Исправлен тип
     group: Joi.string().required(),
     isCancelled: Joi.boolean().default(false), // Исправлен тип

@@ -1,8 +1,6 @@
-const { Group } = require("../models/groupModel");
-const { HttpError } = require("../helpers/HttpError");
-const { Event } = require("../models/eventModel");
-const { User } = require("../models/userrModel");
 
+const { Event } = require("../models/eventModel");
+const { HttpError } = require("../helpers/HttpError");
 // получить все тренировки из всех групп
 const getAllEvents = async (req, res) => {
   try {
@@ -80,28 +78,12 @@ const getEventsByGroup = async (req, res) => {
 
 // создать
 const createEvent = async (req, res) => {
-  const { date, group, isCancelled, participants } = req.body;
-
-  // const { error } = schemas.addEventSchema.validate({
-  //   _id,
-  //   date,
-  //   group,
-  //   isCancelled,
-  //   participants,
-  // });
-  // if (error) {
-  //   return res
-  //     .status(400)
-  //     .json({
-  //       message: `Invalid data: ${error.details
-  //         .map((detail) => detail.message)
-  //         .join(", ")}`,
-  //     });
-  // }
+  const { _id, date, group, isCancelled, participants } = req.body;
 
   try {
     console.log(1)
     const newEvent = new Event({
+      _id,
       date,
       group,
       isCancelled,
