@@ -9,7 +9,6 @@ const generateEventsForMonth = async () => {
 
   for (const group of groups) {
     const schedule = group.schedule;
-
     // const startOfMonth = moment().startOf('month');
     // const endOfMonth = moment().endOf('month');
     // (let day = startOfMonth; day.isBefore(endOfMonth); day.add(1, 'day'))
