@@ -92,6 +92,7 @@ const schemas = {
   updateGroupScheduleSchema,
   updateGroupPriceSchema,
 };
+
 module.exports = {
   Group,
   schemas

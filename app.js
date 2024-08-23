@@ -3,10 +3,8 @@ const logger = require('morgan')
 const cors = require('cors')
 const dotenv = require('dotenv')
 const userRouter = require('./routes/user')
-const authRouter = require('./routes/auth')
 const groupRouter = require('./routes/group')
 const eventsRouter = require('./routes/events')
-const scheduler = require('./scheduler');
 
 const app = express()
 
@@ -19,7 +17,6 @@ app.use(express.json())
 dotenv.config()
 app.use('/users/', userRouter)
  app.use('/groups/', groupRouter)
- app.use('/auth/', authRouter)
  app.use('/events/', eventsRouter)
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
