@@ -15,7 +15,8 @@ app.use(cors());
 app.use(express.json());
 
 dotenv.config();
-app.get("/favicon.ico", (req, res) => res.status(204));
+app.use(express.static(path.join(__dirname, 'public')));
+app.get("/favicon.ico", (req, res) => res.sendFile(path.join(__dirname, 'public', 'favicon.ico')));
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Ukenback API" });
 });
