@@ -15,6 +15,10 @@ app.use(cors());
 app.use(express.json());
 
 dotenv.config();
+app.get("/favicon.ico", (req, res) => res.status(204));
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to Ukenback API" });
+});
 app.use("/users/", userRouter);
 app.use("/groups/", groupRouter);
 app.use("/events/", eventsRouter);

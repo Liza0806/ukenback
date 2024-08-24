@@ -10,6 +10,7 @@ mongoose.connect(DB_HOST).then(() => {
 });
 
 module.exports = (req, res) => {
+  console.log(`Request received: ${req.method} ${req.url}`);
   app(req, res);  // Передаем запрос и ответ в Express приложение
 };
 
