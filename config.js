@@ -4,6 +4,4 @@ const DB_HOST = "mongodb+srv://fildepiorsta:NDbCDGdXHv0kw8KP@cluster0.7nhx7zp.mo
 module.exports = {
     DB_HOST,
 }
-
-
 // mongodb+srv://fildepiorsta:NDbCDGdXHv0kw8KP@cluster0.7nhx7zp.mongodb.net/
