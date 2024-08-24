@@ -7,7 +7,7 @@ const groupRouter = require("./routes/group");
 const eventsRouter = require("./routes/events");
 
 const app = express();
-
+const path = require('path');
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
 app.use(logger(formatsLogger));
