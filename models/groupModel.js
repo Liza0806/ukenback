@@ -61,8 +61,8 @@ const scheduleSchemaJoi = Joi.object({
   time: Joi.string().required(),
 });
 const paymentSchemaJoi = Joi.object({
-  dailyPayment: Joi.string().allow('').default('0'),
-  monthlyPayment: Joi.string().allow('').default('0'),
+  dailyPayment: Joi.number().allow('').default('0'),
+  monthlyPayment: Joi.number().allow('').default('0'),
 });
 
 
