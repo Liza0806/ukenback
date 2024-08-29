@@ -40,7 +40,6 @@ const paymentSchema = new Schema ({
 const groupSchema = new Schema({
   _id: {
     type: String,
-    required: true,
   },
   title: {
     type: String,
@@ -67,7 +66,7 @@ const paymentSchemaJoi = Joi.object({
 
 
 const addGroupSchema = Joi.object({
-  _id: Joi.string().required(),
+  _id: Joi.string(),
   title: Joi.string().default('newGroupTitle'),
   coachId: Joi.string().default('Kostya'),
   payment: Joi.array().items(paymentSchemaJoi).default([]),
