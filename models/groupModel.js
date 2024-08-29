@@ -48,7 +48,6 @@ const groupSchema = new Schema({
   },
   coachId: {
     type: String,
-    required: true,
     default: "Kostya"
   },
 payment: [paymentSchema],
