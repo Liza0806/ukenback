@@ -34,7 +34,7 @@ const addGroup = async (req, res) => {
 
   try {
     // Проверка валидности данных
-    const isValid = isValidGroupData({ title, coachId, payment, schedule });
+    const isValid = isValidGroupData({ title, payment, schedule });
     if (!isValid) {
       return res.status(400).json({ message: "Invalid group data" });
     }
@@ -74,10 +74,9 @@ const addGroup = async (req, res) => {
   }
 };
 
-const isValidGroupData = ({ title, coachId, payment, schedule }) => {
+const isValidGroupData = ({ title, payment, schedule }) => {
   return (
     typeof title === "string" &&
-    typeof coachId === "string" &&
     Array.isArray(payment) &&
     Array.isArray(schedule)
   );
