@@ -29,17 +29,28 @@ const getGroupById = async (req, res) => {
     HttpError(500, `Failed to retrieve group ${error.message}`);
   }
 };
-
 const addGroup = async (req, res) => {
   const { title, coachId, payment, schedule } = req.body;
 
-  isValidGroupData({ title, coachId, payment, schedule });
-
-  if (!isValidGroupData({ title, coachId, payment, schedule })) {
-    return res.status(400).json({ message: "Invalid group data" });
-  }
-
   try {
+    // Проверка валидности данных
+    const isValid = isValidGroupData({ title, coachId, payment, schedule });
+    if (!isValid) {
+      return res.status(400).json({ message: "Invalid group data" });
+    }
+
+    // Проверка, существует ли уже группа с таким названием
+    const groupExists = await isGroupAlreadyExist({ title });
+    if (groupExists) {
+      return res.status(400).json({ message: "This title already exists" });
+    }
+
+    // Проверка расписания
+    const isSuitable = await isGroupScheduleSuitable(schedule);
+    if (!isSuitable) {
+      return res.status(400).json({ message: "Schedule is not suitable" });
+    }
+
     const group = await Group.create({ title, coachId, payment, schedule });
 
     const {
@@ -71,7 +82,43 @@ const isValidGroupData = ({ title, coachId, payment, schedule }) => {
     Array.isArray(schedule)
   );
 };
+const isGroupAlreadyExist = async({ title }) => {
+ try {
+  return await Group.find({title: title})
+ }
+ catch {
+  return "There is an error in isGroupAlreadyExist function"
+ }
+}
 
+const isGroupScheduleSuitable = async({ schedule }) => {
+  try {
+    const groups = await Group.find({
+      'schedule': {
+        $elemMatch: {
+          day: { $in: schedule.map(s => s.day) },
+          time: { $in: schedule.map(s => s.time) }
+        }
+      }
+    }).exec();
+    if (groups.length > 0) {
+      for (const group of groups) {
+        for (const existingSchedule of group.schedule) {
+          for (const newSchedule of schedule) {
+            if (existingSchedule.day === newSchedule.day && existingSchedule.time === newSchedule.time) {
+              // сообщ об ошибке с указанием объекта
+              return `Conflict detected: ${JSON.stringify(newSchedule)} exists in group '${group.title}'`;
+            }
+          }
+        }
+      }
+    }
+    return null;
+
+  } catch (error) {
+    return `There is an error in isGroupScheduleIsSuitable function: ${error.message}`;
+  }
+};
 const updateGroup = async (req, res) => {
   try {
     const { id } = req.params;
