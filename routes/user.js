@@ -11,6 +11,8 @@ router.patch("/:userId", controllers.updateUser); /// напиши валида�
 router.delete("/:userId", controllers.deleteUser);
 router.post("/:userId/visits", controllers.addVisit);
 router.patch("/:userId/balance", controllers.updateUserBalance); /// напиши валидацию
+router.get("/search", controllers.searchUsersByName);
+
 
 router.get("/:userId/groups", controllers.getUserGroups);
 

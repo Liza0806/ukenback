@@ -21,6 +21,23 @@ const getUserById = async (req, res) => {
     HttpError(500, `Failed to retrieve user ${error.message}`);
   }
 };
+const getUserByName = async (req, res) => {
+  const { name } = req.query;
+  if (!name) {
+    return res.status(400).json({ message: "Name query parameter is required" });
+  }
+  try {
+    const user = await User.find({
+      name: { $regex: name, $options: "i" }
+    });
+    if (!user) {
+      HttpError(404, "Group not found");
+    }
+    res.json(user);
+  } catch (error) {
+    HttpError(500, `Failed to retrieve user ${error.message}`);
+  }
+};
 const updateUser = async (req, res, next) => {
   try {
     const { userId } = req.params;
@@ -154,4 +171,5 @@ module.exports = {
   addVisit,
   updateUserBalance,
   getUserGroups,
+  getUserByName,
 };
