@@ -34,7 +34,7 @@ const addGroup = async (req, res) => {
 
   try {
     // Проверка валидности данных
-    const isValid = isValidGroupData({ title, payment, schedule });
+    const isValid = isValidGroupData({ title, payment, coachId, schedule });
     if (!isValid) {
       return res.status(400).json({ message: "Invalid group data" });
     }
@@ -42,17 +42,20 @@ const addGroup = async (req, res) => {
     // Проверка, существует ли уже группа с таким названием
     const groupExists = await isGroupAlreadyExist({ title });
     if (groupExists) {
+      console.log("This title already exists");
       return res.status(400).json({ message: "This title already exists" });
     }
 
     // Проверка расписания
-    const isSuitable = await isGroupScheduleSuitable(schedule);
-    if (!isSuitable) {
-      return res.status(400).json({ message: "Schedule is not suitable" });
+    const scheduleCheck = await isGroupScheduleSuitable(schedule);
+    if (scheduleCheck) {
+      return res.status(400).json({ message: scheduleCheck });
     }
 
+    // Создание новой группы
     const group = await Group.create({ title, coachId, payment, schedule });
 
+    // Формирование ответа
     const {
       _id,
       title: groupTitle,
@@ -74,23 +77,29 @@ const addGroup = async (req, res) => {
   }
 };
 
-const isValidGroupData = ({ title, payment, schedule }) => {
+const isValidGroupData = ({ title, payment, coachId, schedule }) => {
+  // Более строгие проверки можно добавить здесь
   return (
     typeof title === "string" &&
+    typeof coachId === "string" &&
     Array.isArray(payment) &&
-    Array.isArray(schedule)
+    payment.every(p => typeof p === 'object' && p !== null) && // Пример проверки для payment
+    Array.isArray(schedule) &&
+    schedule.every(s => typeof s.day === 'string' && typeof s.time === 'string') // Пример проверки для schedule
   );
 };
-const isGroupAlreadyExist = async({ title }) => {
- try {
-  return await Group.find({title: title})
- }
- catch {
-  return "There is an error in isGroupAlreadyExist function"
- }
-}
 
-const isGroupScheduleSuitable = async({ schedule }) => {
+const isGroupAlreadyExist = async ({ title }) => {
+  try {
+    const group = await Group.findOne({ title });
+    return group !== null;
+  } catch (error) {
+    console.error("Error in isGroupAlreadyExist function:", error);
+    throw new Error("Error checking group existence");
+  }
+};
+
+const isGroupScheduleSuitable = async (schedule) => {
   try {
     const groups = await Group.find({
       'schedule': {
@@ -100,12 +109,13 @@ const isGroupScheduleSuitable = async({ schedule }) => {
         }
       }
     }).exec();
+
     if (groups.length > 0) {
       for (const group of groups) {
         for (const existingSchedule of group.schedule) {
           for (const newSchedule of schedule) {
             if (existingSchedule.day === newSchedule.day && existingSchedule.time === newSchedule.time) {
-              // сообщ об ошибке с указанием объекта
+              // Возвращаем сообщение об ошибке с указанием объекта
               return `Conflict detected: ${JSON.stringify(newSchedule)} exists in group '${group.title}'`;
             }
           }
@@ -115,9 +125,11 @@ const isGroupScheduleSuitable = async({ schedule }) => {
     return null;
 
   } catch (error) {
-    return `There is an error in isGroupScheduleIsSuitable function: ${error.message}`;
+    console.error("Error in isGroupScheduleSuitable function:", error);
+    throw new Error("Error checking schedule suitability");
   }
 };
+
 const updateGroup = async (req, res) => {
   try {
     const { id } = req.params;
