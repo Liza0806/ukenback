@@ -21,7 +21,7 @@ const getUserById = async (req, res) => {
     HttpError(500, `Failed to retrieve user ${error.message}`);
   }
 };
-const getUserByName = async (req, res) => {
+const searchUsersByName = async (req, res) => {
   const { name } = req.query;
   if (!name) {
     return res.status(400).json({ message: "Name query parameter is required" });
@@ -171,5 +171,5 @@ module.exports = {
   addVisit,
   updateUserBalance,
   getUserGroups,
-  getUserByName,
+  searchUsersByName,
 };
