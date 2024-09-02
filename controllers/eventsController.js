@@ -124,6 +124,7 @@ const updateEvent = async (req, res) => {
   }
 };
 
+
 // {
 //   "_id": "event1_20240925",
 //   "date": "2025-09-25T08:00:00.000Z",
