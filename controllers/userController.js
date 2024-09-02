@@ -14,10 +14,11 @@ const getUserById = async (req, res) => {
   try {
     const user = await User.find({ _id: id });
     if (!user) {
-   //   HttpError(404, "Group not found");
+      return res.status(400).json({ message: "User not found" });
     }
     res.json(user);
   } catch (error) {
+    return res.status(500).json({ message: `Failed to retrieve user ${error.message}` });
   //  HttpError(500, `Failed to retrieve user ${error.message}`);
   }
 };
