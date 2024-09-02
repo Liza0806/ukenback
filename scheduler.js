@@ -33,7 +33,8 @@ console.log(groups, 'groups')
               await Event.create({
                 _id: `${groupId}_${eventDate.format('YYYYMMDD')}`, // Идентификатор события
                 date: eventDate.toDate(),
-                group: groupId,
+                groupTitle: group.title,
+                groupId: group._id,
                 participants: [], // Изначально без участников
                 isCancelled: false,
               });

@@ -12,7 +12,11 @@ const eventSchema = new Schema({
         type: Date,
         required: true
     },
-    group: {
+    groupTitle: {
+        type: String,
+        required: true
+    },
+    groupId: {
         type: String,
         required: true
     },
@@ -36,7 +40,8 @@ const participantsSchemaJoi = Joi.object({
 const addEventSchema = Joi.object({
     _id: Joi.string().required(),
     date: Joi.date().required(), // Исправлен тип
-    group: Joi.string().required(),
+    groupTitle: Joi.string().required(),
+    groupId: Joi.string().required(),
     isCancelled: Joi.boolean().default(false), // Исправлен тип
     participants: Joi.array().items(participantsSchemaJoi).default([]),
 });

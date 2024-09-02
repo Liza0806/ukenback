@@ -14,30 +14,52 @@ const getUserById = async (req, res) => {
   try {
     const user = await User.find({ _id: id });
     if (!user) {
-      HttpError(404, "Group not found");
+   //   HttpError(404, "Group not found");
     }
     res.json(user);
   } catch (error) {
-    HttpError(500, `Failed to retrieve user ${error.message}`);
+  //  HttpError(500, `Failed to retrieve user ${error.message}`);
   }
 };
+
+// const searchUsersByName = async (req, res) => {
+//   const { name } = req.query;
+//   if (!name) {
+//     return res.status(400).json({ message: "Name query parameter is required" });
+//   }
+//   try {
+//     const user = await User.find({
+//       name: { $regex: name, $options: "i" }
+//     });
+//     if (!user) {
+//       HttpError(404, "Group not found");
+//     }
+//     res.json(user);
+//   } catch (error) {
+//     HttpError(500, `Failed to retrieve user ${error.message}`);
+//   }
+// };
 const searchUsersByName = async (req, res) => {
   const { name } = req.query;
   if (!name) {
     return res.status(400).json({ message: "Name query parameter is required" });
   }
   try {
-    const user = await User.find({
+    const users = await User.find({
       name: { $regex: name, $options: "i" }
     });
-    if (!user) {
-      HttpError(404, "Group not found");
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: "No users found" });
     }
-    res.json(user);
+
+    res.json(users);
   } catch (error) {
-    HttpError(500, `Failed to retrieve user ${error.message}`);
+    console.error('Failed to retrieve user:', error.message);
+    return res.status(500).json({ message: `Failed to retrieve user ${error.message}` });
   }
 };
+
 const updateUser = async (req, res, next) => {
   try {
     const { userId } = req.params;
