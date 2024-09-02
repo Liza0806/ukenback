@@ -49,9 +49,9 @@ const addGroup = async (req, res) => {
     // Проверка расписания
     const scheduleCheck = await isGroupScheduleSuitable(schedule);
     if (scheduleCheck) {
+      console.log({ message: scheduleCheck });
       return res.status(400).json({ message: scheduleCheck });
     }
-
     // Создание новой группы
     const group = await Group.create({ title, coachId, payment, schedule });
 
@@ -95,7 +95,7 @@ const isGroupAlreadyExist = async ({ title }) => {
     return group !== null;
   } catch (error) {
     console.error("Error in isGroupAlreadyExist function:", error);
-    throw new Error("Error checking group existence");
+    return res.status(400).json({ message: "This title already exists" });
   }
 };
 

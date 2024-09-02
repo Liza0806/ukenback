@@ -50,5 +50,8 @@ console.log(groups, 'groups')
 }
 
 // Запуск задачи немедленно при старте приложения
-createEventsForCurrentMonth();
 
+
+module.exports = {
+  createEventsForCurrentMonth,
+};
