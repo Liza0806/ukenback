@@ -1,4 +1,3 @@
-
 const { Event } = require("../models/eventModel");
 const { HttpError } = require("../helpers/HttpError");
 // получить все тренировки из всех групп
@@ -81,7 +80,7 @@ const createEvent = async (req, res) => {
   const { _id, date, group, isCancelled, participants } = req.body;
 
   try {
-    console.log(1)
+    console.log(1);
     const newEvent = new Event({
       _id,
       date,
@@ -89,23 +88,22 @@ const createEvent = async (req, res) => {
       isCancelled,
       participants,
     });
-    console.log(2)
+    console.log(2);
     await newEvent.save();
-    console.log(3)
+    console.log(3);
     return res.status(201).json(newEvent);
   } catch (error) {
-    console.log(4)
+    console.log(4);
     return res
       .status(500)
       .json({ message: `Internal Server Error: ${error.message}` });
   }
-  
 };
 
 // обновить
 const updateEvent = async (req, res) => {
   const { eventId } = req.params;
-  const updates = req.body;
+  const newEvent = req.body;
 
   try {
     const event = await Event.findById(eventId);
@@ -113,7 +111,7 @@ const updateEvent = async (req, res) => {
       return res.status(404).json({ message: "Event not found" });
     }
 
-    Object.assign(event, updates);
+    Object.assign(event, newEvent);
     await event.save();
 
     return res.json(event);
@@ -123,7 +121,6 @@ const updateEvent = async (req, res) => {
       .json({ message: `Internal Server Error: ${error.message}` });
   }
 };
-
 
 // {
 //   "_id": "event1_20240925",
@@ -135,7 +132,6 @@ const updateEvent = async (req, res) => {
 //     { "id": "user2", "name": "Jane" }
 //   ]
 // }
-
 
 // удалить
 const deleteEvent = async (req, res) => {
