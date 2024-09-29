@@ -9,10 +9,10 @@ const getAllUsers = async (req, res) => {
   res.json(users);
 };
 
-const getUserById = async (req, res) => {
+const getUserByTelegramId = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await User.findById({ id });
+    const user = await User.findOne({ "telegramId": id });
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
@@ -188,7 +188,7 @@ const getUserGroups = async (req, res, next) => {
 
 module.exports = {
   getAllUsers,
-  getUserById,
+  getUserByTelegramId,
   updateUser,
   deleteUser,
   addVisit,

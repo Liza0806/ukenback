@@ -5,7 +5,7 @@ const { schemas } = require("../models/userModel");
 const controllers = require("../controllers/userController");
 
 router.get("/", controllers.getAllUsers);
-// router.get("/:id", controllers.getUserById);
+router.get("/:id", controllers.getUserById);
 // router.post('/', validateBody(schemas.registerSchema), controllers.addUser);
 router.patch("/:userId", controllers.updateUser); /// напиши валидацию
 router.delete("/:userId", controllers.deleteUser);

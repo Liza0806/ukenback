@@ -10,7 +10,7 @@ async function createEventsForCurrentMonth() {
     const groups = await Group.find({});
 console.log(groups, 'groups')
     // Берем текущую дату и считаем количество дней до конца следующего месяца
-    const today = moment().add(0, 'month');
+    const today = moment().add(4, 'month');
     const daysInMonth = today.daysInMonth();
 
     for (const group of groups) {
