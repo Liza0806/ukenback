@@ -9,7 +9,7 @@ const controllers =require('../controllers/groupController')
 router.get("/",  controllers.getAllGroups)
 router.get("/:id", controllers.getGroupById);
  router.post("/", validateBody(schemas.addGroupSchema), controllers.addGroup);
-router.put('/', validateBody(schemas.addGroupSchema), controllers.updateGroup)
+router.put('/:id', validateBody(schemas.addGroupSchema), controllers.updateGroup)
 router.delete("/:id", controllers.deleteGroup)
 
 module.exports = router //validateBody(schemas.updateGroupPriceSchema),
