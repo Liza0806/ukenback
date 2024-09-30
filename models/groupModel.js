@@ -79,7 +79,7 @@ const paymentSchemaJoi = Joi.object({
 const participantsSchemaJoi = Joi.object({
   _id: Joi.string().required(),
   name: Joi.string().required(),
-  telegramId: Joi.number.required(),
+  telegramId: Joi.number().required(),
 })
 const addGroupSchema = Joi.object({
   title: Joi.string().default('newGroupTitle'),
