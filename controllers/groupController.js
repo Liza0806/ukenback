@@ -155,7 +155,7 @@ const updateGroup = async (req, res) => {
     res.status(200).json(updatedGroup);
   } catch (err) {
     // Логируем и возвращаем ошибку
-    handleError(err, res);
+    console.log(err)
   }
 };
 
