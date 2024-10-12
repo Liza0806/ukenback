@@ -15,13 +15,15 @@ const getAllGroups = async (req, res) => {
 
 /// Получить 1 по ид
 const getGroupById = async (req, res) => {
-  const groupId = req.params.id; // Получаем ID из параметров запроса
+  const groupId = req.params._id; // Получаем ID из параметров запроса
 
   try {
     const group = await Group.findById(groupId); // Найти группу по ID
 
     if (!group) {
-      return HttpError(404, "Group not found");
+console.log("Group not found")
+
+     // return HttpError(404, "Group not found");
     }
 
     res.json(group);
@@ -133,7 +135,7 @@ const isGroupScheduleSuitable = async (schedule) => {
 const updateGroup = async (req, res) => {
   console.log(req.body, 'updateGroup1')
   try {
-    const { id } = req.params;
+    const { _id } = req.params;
     const updateData = req.body; 
    const { title, coachId, payment, schedule } = req.body; 
    console.log(req.body, 'updateGroup2')
@@ -144,7 +146,7 @@ const updateGroup = async (req, res) => {
       return res.status(400).json({ message: "Invalid group data" });
     }
     // Ищем группу и обновляем её
-    const updatedGroup = await Group.findByIdAndUpdate(id, updateData, {
+    const updatedGroup = await Group.findByIdAndUpdate(_id, updateData, {
       new: true,
     });
 
@@ -163,10 +165,10 @@ const updateGroup = async (req, res) => {
 
 const deleteGroup = async (req, res) => {
   try {
-    const { id } = req.params; // Получаем ID группы из параметров маршрута
+    const { _id } = req.params; // Получаем ID группы из параметров маршрута
 
     // Ищем и удаляем группу по ID
-    const deletedGroup = await Group.findByIdAndDelete(id);
+    const deletedGroup = await Group.findByIdAndDelete(_id);
 
     // Если группа не найдена, возвращаем ошибку
     if (!deletedGroup) {
