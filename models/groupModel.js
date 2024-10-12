@@ -60,6 +60,10 @@ const paymentSchema = new Schema ({
 })
 
 const groupSchema = new Schema({
+  _id: {
+    type: String,
+    required: false
+  },
   title: {
     type: String,
     required: [true, "Set name for the group"],
@@ -91,6 +95,7 @@ const participantsSchemaJoi = Joi.object({
   telegramId: Joi.number().required(),
 })
 const addGroupSchema = Joi.object({
+  _id: Joi.string(),
   title: Joi.string().default('newGroupTitle'),
   coachId: Joi.string().default('Kostya'),
   payment: Joi.array().items(paymentSchemaJoi).default([]),
