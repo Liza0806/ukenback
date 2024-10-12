@@ -22,6 +22,9 @@ const scheduleSchema = new Schema({
     type: String,
     required: true,
   },
+  _id: {
+    type: String
+  }
 });
 
 const participantsSchema = new Schema({
@@ -70,6 +73,7 @@ participants: [participantsSchema],
 const scheduleSchemaJoi = Joi.object({
   day: Joi.string().required(),
   time: Joi.string().required(),
+  _id: Joi.string()
 });
 const paymentSchemaJoi = Joi.object({
   dailyPayment: Joi.number().allow('').default('0'),
