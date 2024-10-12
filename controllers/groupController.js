@@ -15,22 +15,25 @@ const getAllGroups = async (req, res) => {
 
 /// Получить 1 по ид
 const getGroupById = async (req, res) => {
-  const groupId = req.params._id; // Получаем ID из параметров запроса
+  const {groupId} = req.params; // Получаем ID из параметров запроса
 
   try {
     const group = await Group.findById(groupId); // Найти группу по ID
 
     if (!group) {
-console.log("Group not found")
+      return res.status(404).json({ message: "Group not found" });
 
-     // return HttpError(404, "Group not found");
+      // return HttpError(404, "Group not found");
     }
 
     res.json(group);
   } catch (error) {
-    HttpError(500, `Failed to retrieve group ${error.message}`);
+    return res
+    .status(500)
+    .json({ message: `Error getting group: ${error.message}` })
   }
 };
+
 const addGroup = async (req, res) => {
   const { title, coachId, payment, schedule } = req.body;
 
@@ -85,9 +88,11 @@ const isValidGroupData = ({ title, payment, coachId, schedule }) => {
     typeof title === "string" &&
     typeof coachId === "string" &&
     Array.isArray(payment) &&
-    payment.every(p => typeof p === 'object' && p !== null) && // Пример проверки для payment
+    payment.every((p) => typeof p === "object" && p !== null) && // Пример проверки для payment
     Array.isArray(schedule) &&
-    schedule.every(s => typeof s.day === 'string' && typeof s.time === 'string') // Пример проверки для schedule
+    schedule.every(
+      (s) => typeof s.day === "string" && typeof s.time === "string"
+    ) // Пример проверки для schedule
   );
 };
 
@@ -104,28 +109,32 @@ const isGroupAlreadyExist = async ({ title }) => {
 const isGroupScheduleSuitable = async (schedule) => {
   try {
     const groups = await Group.find({
-      'schedule': {
+      schedule: {
         $elemMatch: {
-          day: { $in: schedule.map(s => s.day) },
-          time: { $in: schedule.map(s => s.time) }
-        }
-      }
+          day: { $in: schedule.map((s) => s.day) },
+          time: { $in: schedule.map((s) => s.time) },
+        },
+      },
     }).exec();
 
     if (groups.length > 0) {
       for (const group of groups) {
         for (const existingSchedule of group.schedule) {
           for (const newSchedule of schedule) {
-            if (existingSchedule.day === newSchedule.day && existingSchedule.time === newSchedule.time) {
+            if (
+              existingSchedule.day === newSchedule.day &&
+              existingSchedule.time === newSchedule.time
+            ) {
               // Возвращаем сообщение об ошибке с указанием объекта
-              return `Conflict detected: ${JSON.stringify(newSchedule)} exists in group '${group.title}'`;
+              return `Conflict detected: ${JSON.stringify(
+                newSchedule
+              )} exists in group '${group.title}'`;
             }
           }
         }
       }
     }
     return null;
-
   } catch (error) {
     console.error("Error in isGroupScheduleSuitable function:", error);
     throw new Error("Error checking schedule suitability");
@@ -133,20 +142,20 @@ const isGroupScheduleSuitable = async (schedule) => {
 };
 
 const updateGroup = async (req, res) => {
-  console.log(req.body, 'updateGroup1')
+  console.log(req.body, "updateGroup1");
   try {
-    const { _id } = req.params;
-    const updateData = req.body; 
-   const { title, coachId, payment, schedule } = req.body; 
-   console.log(req.body, 'updateGroup2')
+    const { id } = req.params;
+    const updateData = req.body;
+    const { title, coachId, payment, schedule } = req.body;
+    console.log(req.body, "updateGroup2");
     // Валидируем данные, полученные от клиента
-    isValidGroupData({ title, coachId, payment, schedule });
+    //isValidGroupData({ title, coachId, payment, schedule });
 
-    if (!isValidGroupData({ title, coachId, payment, schedule })) {
-      return res.status(400).json({ message: "Invalid group data" });
-    }
+    //if (!isValidGroupData({ title, coachId, payment, schedule })) {
+    //  return res.status(400).json({ message: "Invalid group data" });
+   // }
     // Ищем группу и обновляем её
-    const updatedGroup = await Group.findByIdAndUpdate(_id, updateData, {
+    const updatedGroup = await Group.findByIdAndUpdate(id, updateData, {
       new: true,
     });
 
@@ -159,9 +168,13 @@ const updateGroup = async (req, res) => {
     res.status(200).json(updatedGroup);
   } catch (err) {
     // Логируем и возвращаем ошибку
-    console.log(err)
+    return res
+    .status(500)
+    .json({ message: `Internal Server Error: ${error.message}` });
   }
 };
+
+
 
 const deleteGroup = async (req, res) => {
   try {
@@ -191,5 +204,5 @@ module.exports = {
   getGroupById,
   addGroup,
   updateGroup,
-  deleteGroup
+  deleteGroup,
 };
