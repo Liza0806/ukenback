@@ -52,6 +52,10 @@ const paymentSchema = new Schema ({
     type: Number,
     required: false,
     default: 0
+  },
+  _id: {
+    type: String,
+    required: false
   }
 })
 
@@ -78,6 +82,7 @@ const scheduleSchemaJoi = Joi.object({
 const paymentSchemaJoi = Joi.object({
   dailyPayment: Joi.number().allow('').default('0'),
   monthlyPayment: Joi.number().allow('').default('0'),
+  _id: Joi.string()
 });
 
 const participantsSchemaJoi = Joi.object({
