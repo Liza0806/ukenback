@@ -18,7 +18,7 @@ const getGroupById = async (req, res) => {
   const {id} = req.params; // Получаем ID из параметров запроса
 console.log(id, 'id in getGroupById')
   try {
-    const group = await Group.findById(id); // Найти группу по ID
+    const group = await Group.findOne({_id: id}); // Найти группу по ID
 
     if (!group) {
       return res.status(404).json({ message: "Group not found" });
