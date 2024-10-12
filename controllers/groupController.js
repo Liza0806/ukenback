@@ -131,10 +131,12 @@ const isGroupScheduleSuitable = async (schedule) => {
 };
 
 const updateGroup = async (req, res) => {
+  console.log(req.body, 'updateGroup1')
   try {
     const { id } = req.params;
     const updateData = req.body; 
    const { title, coachId, payment, schedule } = req.body; 
+   console.log(req.body, 'updateGroup2')
     // Валидируем данные, полученные от клиента
     isValidGroupData({ title, coachId, payment, schedule });
 
