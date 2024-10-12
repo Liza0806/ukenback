@@ -15,10 +15,10 @@ const getAllGroups = async (req, res) => {
 
 /// Получить 1 по ид
 const getGroupById = async (req, res) => {
-  const {groupId} = req.params; // Получаем ID из параметров запроса
+  const {id} = req.params; // Получаем ID из параметров запроса
 
   try {
-    const group = await Group.findById(groupId); // Найти группу по ID
+    const group = await Group.findById(id); // Найти группу по ID
 
     if (!group) {
       return res.status(404).json({ message: "Group not found" });
