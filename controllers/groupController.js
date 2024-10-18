@@ -178,10 +178,10 @@ const updateGroup = async (req, res) => {
 
 const deleteGroup = async (req, res) => {
   try {
-    const { _id } = req.params; // Получаем ID группы из параметров маршрута
+    const { id } = req.params; // Получаем ID группы из параметров маршрута
 
     // Ищем и удаляем группу по ID
-    const deletedGroup = await Group.findByIdAndDelete(_id);
+    const deletedGroup = await Group.findByIdAndDelete(id);
 
     // Если группа не найдена, возвращаем ошибку
     if (!deletedGroup) {
