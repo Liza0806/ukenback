@@ -50,10 +50,10 @@ const paymentSchema = new Schema ({
 })
 
 const groupSchema = new Schema({
-  // _id: {
-  //   type: String,
-  //   required: false
-  // },
+  _id: {
+    type: String,
+    required: false
+  },
   title: {
     type: String,
     required: [true, "Set name for the group"],
