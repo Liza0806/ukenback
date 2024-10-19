@@ -25,7 +25,7 @@ const eventSchema = new Schema({
         default: false
     },
     participants: {
-        type: [{ id: String, name: String, telegramId: String }], // Массив объектов для хранения ID и имен участников
+        type: [{ id: String, name: String, telegramId: String }],
         required: true
     }
 }, { timestamps: true }); // timestamps добавлены как опция схемы
@@ -40,10 +40,10 @@ const participantsSchemaJoi = Joi.object({
 
 const addEventSchema = Joi.object({
     _id: Joi.string().required(),
-    date: Joi.date().required(), // Исправлен тип
+    date: Joi.date().required(), 
     groupTitle: Joi.string().required(),
     groupId: Joi.string().required(),
-    isCancelled: Joi.boolean().default(false), // Исправлен тип
+    isCancelled: Joi.boolean().default(false), 
     participants: Joi.array().items(participantsSchemaJoi).default([]),
 });
 

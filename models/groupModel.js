@@ -3,17 +3,10 @@ const { handleMongooseError } = require("../helpers/handleMongooseError");
 
 const Joi = require("joi");
 
-const validDays = [
-  "sunday",
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-];
-
 const scheduleSchema = new Schema({
+  _id: {
+    type: String
+  },
   day: {
     type: String,
     required: true,
@@ -22,9 +15,6 @@ const scheduleSchema = new Schema({
     type: String,
     required: true,
   },
-  _id: {
-    type: String
-  }
 });
 
 const participantsSchema = new Schema({
@@ -43,6 +33,10 @@ const participantsSchema = new Schema({
 });
 
 const paymentSchema = new Schema ({
+  _id: {
+    type: String,
+    required: false
+  },
   dailyPayment: {
     type: Number,
     required: false,
@@ -53,10 +47,6 @@ const paymentSchema = new Schema ({
     required: false,
     default: 0
   },
-  _id: {
-    type: String,
-    required: false
-  }
 })
 
 const groupSchema = new Schema({
@@ -79,14 +69,15 @@ participants: [participantsSchema],
 });
 
 const scheduleSchemaJoi = Joi.object({
+  _id: Joi.string(),
   day: Joi.string().required(),
   time: Joi.string().required(),
-  _id: Joi.string()
 });
 const paymentSchemaJoi = Joi.object({
+  _id: Joi.string(),
   dailyPayment: Joi.number().allow('').default('0'),
   monthlyPayment: Joi.number().allow('').default('0'),
-  _id: Joi.string()
+  
 });
 
 const participantsSchemaJoi = Joi.object({
