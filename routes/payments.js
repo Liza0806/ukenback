@@ -16,7 +16,7 @@ router.post("/create-payment", (req, res) => {
     currency,
     description,
     order_id,
-    result_url: "https://uken.netlify.app//users/payments/success", // адрес фронтенда для возврата пользователя
+    result_url: "https://uken.netlify.app/payments/success", // адрес фронтенда для возврата пользователя
     server_url: "https://ukenback.vercel.app/api/payment/liqpay-callback",
   };
 
