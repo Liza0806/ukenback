@@ -11,8 +11,15 @@ const app = express();
 const path = require("path");
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
+const corsOptions = {
+  origin: "https://uken.netlify.app", // разрешённый домен
+  optionsSuccessStatus: 200, 
+};
+
+app.use(cors(corsOptions));
+
 app.use(logger(formatsLogger));
-app.use(cors());
+
 app.use(express.json());
 
 dotenv.config();

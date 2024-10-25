@@ -19,7 +19,6 @@ router.post("/create-payment", (req, res) => {
     result_url: "https://uken.netlify.app/payments/success", // адрес фронтенда для возврата пользователя
     server_url: "https://ukenback.vercel.app/api/payment/liqpay-callback",
   };
-
   const data = Buffer.from(JSON.stringify(paymentData)).toString("base64");
   const signature = crypto
     .createHash("sha1")
