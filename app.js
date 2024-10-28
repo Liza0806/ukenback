@@ -12,8 +12,8 @@ const path = require("path");
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
 const corsOptions = {
-  origin: "https://uken.netlify.app", // разрешённый домен
-  optionsSuccessStatus: 200, 
+  origin: ["https://uken.netlify.app", "http://localhost:3000"], // разрешённые домены
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
