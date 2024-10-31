@@ -9,7 +9,7 @@ const eventSchema = new Schema({
         required: true
     },
     date: {
-        type: Date,
+        type: String,
         required: true
     },
     groupTitle: {
@@ -40,7 +40,7 @@ const participantsSchemaJoi = Joi.object({
 
 const addEventSchema = Joi.object({
     _id: Joi.string().required(),
-    date: Joi.date().required(), 
+    date: Joi.string().isoDate().required(),
     groupTitle: Joi.string().required(),
     groupId: Joi.string().required(),
     isCancelled: Joi.boolean().default(false), 
