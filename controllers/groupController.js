@@ -35,7 +35,7 @@ console.log(id, 'id in getGroupById')
 };
 
 const addGroup = async (req, res) => {
-  const { title, coachId, payment, schedule } = req.body;
+  const { title, coachId, payment, schedule, participants } = req.body;
 
   try {
     // Проверка валидности данных
