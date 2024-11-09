@@ -58,7 +58,7 @@ const addGroup = async (req, res) => {
       return res.status(400).json({ message: scheduleCheck });
     }
     // Создание новой группы
-    const group = await Group.create({ title, coachId, payment, schedule });
+    const group = await Group.create({ title, coachId, payment, schedule, participants });
 
     // Формирование ответа
     const {
