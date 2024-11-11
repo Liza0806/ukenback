@@ -167,7 +167,7 @@ const updateGroup = async (req, res) => {
     }
 
     // Возвращаем обновленные данные группы
-    res.status(200).json(updatedGroup);
+    res.status(200).json({ updatedGroup, id });
   } catch (err) {
     // Логируем и возвращаем ошибку
     return res
