@@ -67,6 +67,7 @@ const addGroup = async (req, res) => {
       coachId: groupCoachId,
       payment: groupPayment,
       schedule: groupSchedule,
+      participants: groupParticipants,
     } = group;
 
     res.status(201).json({
@@ -75,6 +76,7 @@ const addGroup = async (req, res) => {
       coachId: groupCoachId,
       payment: groupPayment,
       schedule: groupSchedule,
+      participants: groupParticipants,
     });
   } catch (err) {
     console.error("Error adding group:", err);
