@@ -195,14 +195,14 @@ const deleteGroup = async (req, res) => {
         date: { $gt: new Date().toISOString() } // Удаляем только будущие события
       });
 
-      // Проверка, были ли удалены события
-      const eventMessage = result.deletedCount > 0 
-        ? "Associated future events successfully deleted" 
-        : "No associated future events found";
+      // // Проверка, были ли удалены события
+      // const eventMessage = result.deletedCount > 0 
+      //   ? "Associated future events successfully deleted" 
+      //   : "No associated future events found";
 
       // Отправка ответа с ID и сообщением
       res.status(200).json({ 
-        message: `Group deleted. ${eventMessage}`, 
+        message: `Group deleted.`, // ${eventMessage}
         _id: id 
       });
     } catch (error) {
