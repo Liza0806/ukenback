@@ -199,7 +199,8 @@ const deleteGroup = async (req, res) => {
   
   } catch (err) {
     // Логируем и возвращаем ошибку
-    handleError(err, res);
+    console.log('error in deleteGroup ctrl')
+  //  handleError(err, res);
   }
 };
 
