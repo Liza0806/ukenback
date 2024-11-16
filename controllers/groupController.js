@@ -1,4 +1,5 @@
 const { Group } = require("../models/groupModel");
+const { Event } = require("../models/eventModel");
 const { HttpError } = require("../helpers/HttpError");
 const { User } = require("../models/userModel");
 const { generateEventsForMonth } = require("../plans/nextMonthEvent");
