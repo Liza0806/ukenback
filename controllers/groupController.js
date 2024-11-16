@@ -177,37 +177,43 @@ const updateGroup = async (req, res) => {
 };
 
 
-
 const deleteGroup = async (req, res) => {
   try {
-    const { id } = req.params; // Получаем ID группы из параметров маршрута
+    const { id } = req.params;
 
-    // Ищем и удаляем группу по ID
+    // Удаляем группу по ID
     const deletedGroup = await Group.findByIdAndDelete(id);
 
-    // Если группа не найдена, возвращаем ошибку
     if (!deletedGroup) {
       return res.status(404).json({ message: "Group not found" });
     }
-    try {
-       await Event.deleteMany({
-      groupTitle: deletedGroup.title, 
-      date: { $gt: new Date() } // Удаляем только те события, дата которых позже текущего момента
-    });
-    }
-   catch {
-    console.log('error in deleteGroup ctrl in Event')
-   }
 
-    // Возвращаем сообщение об успешном удалении
-    res.status(200).json({ message: "Group and associated future events successfully deleted", _id: id });
-  
+    try {
+      const result = await Event.deleteMany({
+        groupTitle: deletedGroup.title,
+        date: { $gt: new Date() } // Удаляем только будущие события
+      });
+
+      // Проверка, были ли удалены события
+      const eventMessage = result.deletedCount > 0 
+        ? "Associated future events successfully deleted" 
+        : "No associated future events found";
+
+      // Отправка ответа с ID и сообщением
+      res.status(200).json({ 
+        message: `Group deleted. ${eventMessage}`, 
+        _id: id 
+      });
+    } catch (error) {
+      console.log('error in deleteGroup ctrl in Event', error);
+      return res.status(500).json({ message: "Error deleting events" });
+    }
   } catch (err) {
-    // Логируем и возвращаем ошибку
-    console.log('error in deleteGroup ctrl')
-  //  handleError(err, res);
+    console.log('error in deleteGroup ctrl', err);
+    return res.status(500).json({ message: "Error deleting group" });
   }
 };
+
 
 /// добавить участника и удалить участника
 /// поиск по участникам
