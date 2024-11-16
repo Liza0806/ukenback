@@ -192,7 +192,7 @@ const deleteGroup = async (req, res) => {
     try {
       const result = await Event.deleteMany({
         groupTitle: deletedGroup.title,
-        date: { $gt: new Date() } // Удаляем только будущие события
+        date: { $gt: new Date().toISOString() } // Удаляем только будущие события
       });
 
       // Проверка, были ли удалены события
