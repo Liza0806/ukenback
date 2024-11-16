@@ -189,10 +189,15 @@ const deleteGroup = async (req, res) => {
     if (!deletedGroup) {
       return res.status(404).json({ message: "Group not found" });
     }
-    await Event.deleteMany({
+    try {
+       await Event.deleteMany({
       groupTitle: deletedGroup.title, 
       date: { $gt: new Date() } // Удаляем только те события, дата которых позже текущего момента
     });
+    }
+   catch {
+    console.log('error in deleteGroup ctrl in Event')
+   }
 
     // Возвращаем сообщение об успешном удалении
     res.status(200).json({ message: "Group and associated future events successfully deleted", _id: id });
