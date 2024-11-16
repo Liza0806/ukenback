@@ -2,7 +2,8 @@ const cron = require('node-cron');
 const { Group } = require('./models/groupModel'); 
 const { Event } = require('./models/eventModel'); 
 const moment = require('moment');
-
+require('moment/locale/uk'); // Импорт локали
+moment.locale('uk');
 // // Функция для создания событий с текущей даты до конца месяца
 // async function createEventsForCurrentMonth() {
 //   try {
@@ -61,8 +62,8 @@ async function createEventsForNextMonth() {
   try {
     const groups = await Group.find({});
     const today = moment();
-    const firstDayOfNextMonth = today.clone().add(-2, 'month').startOf('month');
-    const lastDayOfNextMonth = today.clone().add(-2, 'month').endOf('month');
+    const firstDayOfNextMonth = today.clone().add(0, 'month').startOf('month');
+    const lastDayOfNextMonth = today.clone().add(0, 'month').endOf('month');
 
     for (const group of groups) {
       const { schedule, _id: groupId } = group;
