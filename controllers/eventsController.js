@@ -1,12 +1,16 @@
 const { Event } = require("../models/eventModel");
 const { HttpError } = require("../helpers/HttpError");
+
 // получить все тренировки из всех групп
 const getAllEvents = async (req, res) => {
   try {
     const data = await Event.find({});
     res.json(data); // Статус 200 по умолчанию
   } catch (error) {
-    HttpError(500, `Failed to retrieve groups ${error.message}`);
+    console.error(error, 'error'); 
+    res
+      .status(500)
+      .json({ message: `Error getting events: ${error.message}` });
   }
 };
 
