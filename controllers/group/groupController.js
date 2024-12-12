@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const { Group } = require("../../models/groupModel");
 const { Event } = require("../../models/eventModel");
 const { HttpError } = require("../../helpers/HttpError");
@@ -103,39 +104,38 @@ const updateGroup = async (req, res) => {
 
 
 const deleteGroup = async (req, res) => {
-  try {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    // Удаляем группу по ID
+  // Проверка валидности id
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid group ID" });
+  }
+
+  try {
     const deletedGroup = await Group.findByIdAndDelete(id);
 
     if (!deletedGroup) {
       return res.status(404).json({ message: "Group not found" });
     }
 
-    try {
-      const result = await Event.deleteMany({
-        groupTitle: deletedGroup.title,
-        date: { $gt: new Date().toISOString() } // Удаляем только будущие события
-      });
+    // Удаление будущих событий, связанных с группой
+    const result = await Event.deleteMany({
+      groupTitle: deletedGroup.title,
+      date: { $gt: new Date().toISOString() }, // Сравнение с ISO-строкой
+    });
 
-      // // Проверка, были ли удалены события
-      // const eventMessage = result.deletedCount > 0 
-      //   ? "Associated future events successfully deleted" 
-      //   : "No associated future events found";
+    // Формирование ответа
+    const eventMessage = result.deletedCount > 0 
+      ? "Associated future events successfully deleted" 
+      : "No associated future events found";
 
-      // Отправка ответа с ID и сообщением
-      res.status(200).json({ 
-        message: `Group deleted.`, // ${eventMessage}
-        _id: id 
-      });
-    } catch (error) {
-      console.log('error in deleteGroup ctrl in Event', error);
-      return res.status(500).json({ message: "Error deleting events" });
-    }
-  } catch (err) {
-    console.log('error in deleteGroup ctrl', err);
-    return res.status(500).json({ message: "Error deleting group" });
+    return res.status(200).json({
+      message: `Group deleted. ${eventMessage}`,
+      _id: id,
+    });
+  } catch (error) {
+    console.log("Error in deleteGroup controller:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
