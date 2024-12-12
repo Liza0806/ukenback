@@ -8,8 +8,8 @@ router.get('/', controllers.getAllEvents);
 router.get('/:eventId', controllers.getEventById);
 router.get('/date', controllers.getEventsByDate);
 router.get('/groups/:groupId', controllers.getEventsByGroup); 
-router.post('/', validateBody(schemas.addEventSchema), controllers.createEvent); // добавь валидацию, чтобы лишних групп не понаписали
-router.put('/:eventId', controllers.updateEvent); //validateBody(schemas.addEventSchema), 
+router.post('/', validateBody(schemas.eventSchemaJoi), controllers.createEvent); // добавь валидацию, чтобы лишних групп не понаписали
+router.put('/:eventId', validateBody(schemas.eventSchemaJoi), controllers.updateEvent); //validateBody(schemas.eventSchemaJoi), 
 router.delete('/:eventId', controllers.deleteEvent);
 
 module.exports = router;

@@ -1,5 +1,6 @@
-const { Event } = require("../models/eventModel");
-const { HttpError } = require("../helpers/HttpError");
+const { Event, schemas } = require("../../models/eventModel");
+const { validateEvent } = require("../../helpers/validators");
+const { HttpError } = require("../../helpers/HttpError");
 
 // получить все тренировки из всех групп
 const getAllEvents = async (req, res) => {
@@ -7,10 +8,8 @@ const getAllEvents = async (req, res) => {
     const data = await Event.find({});
     res.json(data); // Статус 200 по умолчанию
   } catch (error) {
-    console.error(error, 'error'); 
-    res
-      .status(500)
-      .json({ message: `Error getting events: ${error.message}` });
+    console.error(error, "error");
+    res.status(500).json({ message: `Error getting events: ${error.message}` });
   }
 };
 
@@ -46,22 +45,34 @@ const getEventsByDate = async (req, res) => {
   try {
     const events = await Event.aggregate([
       {
-        $match: { date: { $gte: new Date(startDate), $lt: new Date(endDate) } },
+        $addFields: {
+          dateAsDate: { $toDate: "$date" },
+        },
+      },
+      {
+        $match: {
+          dateAsDate: {
+            $gte: new Date(startDate), // Включительно
+            $lt: new Date(endDate), // Исключительно
+          },
+        },
       },
     ]);
 
-    res.json(events);
+    return res.json(events).status(200);
   } catch (error) {
     return res
       .status(500)
-      .json({ message: `Error retrieving events: ${error.message}` });
+      .json({ message: `Error getting events: ${error.message}` });
   }
 };
 
 // по группе
 const getEventsByGroup = async (req, res) => {
   const { groupId } = req.params;
-
+  if (!groupId) {
+    return res.status(400).json({ message: "GroupId is required." });
+  }
   try {
     const events = await Event.find({ group: groupId });
 
@@ -81,23 +92,40 @@ const getEventsByGroup = async (req, res) => {
 
 // создать
 const createEvent = async (req, res) => {
-  const { _id, date, group, isCancelled, participants } = req.body;
+  const { _id, date, group, isCancelled, groupTitle, participants } = req.body;
+  const event = { _id, date, group, groupTitle, isCancelled, participants };
+
+  if (!_id || !date || !group || isCancelled === undefined || !participants) {
+    return res.status(400).json({
+      message:
+        "Bad Request: Missing required fields (_id, date, group, isCancelled, participants)",
+    });
+  }
 
   try {
-    console.log(1);
+    // Выполняем валидацию
+    const validatedData = validateEvent(schemas.eventSchemaJoi, event);
+    // console.log(validatedData, 'validatedData'); // Логируем результат валидации
+
     const newEvent = new Event({
-      _id,
-      date,
-      group,
-      isCancelled,
-      participants,
+      _id: validatedData._id,
+      date: validatedData.date,
+      group: validatedData.group,
+      groupTitle: validatedData.groupTitle,
+      isCancelled: validatedData.isCancelled,
+      participants: validatedData.participants,
     });
-    console.log(2);
+
     await newEvent.save();
-    console.log(3);
+
     return res.status(201).json(newEvent);
   } catch (error) {
-    console.log(4);
+    if (error.message.startsWith("Validation error")) {
+      return res.status(400).json({ message: error.message });
+    }
+
+    // Логирование ошибки
+    console.error("Error during event creation:", error);
     return res
       .status(500)
       .json({ message: `Internal Server Error: ${error.message}` });
@@ -110,16 +138,30 @@ const updateEvent = async (req, res) => {
   const newEvent = req.body;
 
   try {
+    // Найти существующее событие
     const event = await Event.findById(eventId);
+
     if (!event) {
       return res.status(404).json({ message: "Event not found" });
     }
+    // Выполняем валидацию
+    const validatedData = validateEvent(schemas.eventSchemaJoi, newEvent);
+    // Обновляем событие валидированными данными
+    Object.assign(event, validatedData);
 
-    Object.assign(event, newEvent);
+    // Сохраняем обновленное событие
     await event.save();
 
     return res.json(event);
   } catch (error) {
+    if (error.message.startsWith("Validation error")) {
+      // Возвращаем 400 в случае ошибки валидации
+      return res.status(400).json({ message: error.message });
+    }
+
+    // Логирование ошибки
+    console.error("Error during event update:", error);
+
     return res
       .status(500)
       .json({ message: `Internal Server Error: ${error.message}` });

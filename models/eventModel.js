@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema, model } = require("mongoose");
 const { handleMongooseError } = require("../helpers/handleMongooseError");
-const Joi = require('joi'); // Добавь импорт Joi, если его нет
+const Joi = require('joi'); 
 
 const eventSchema = new Schema({
     _id: {
@@ -38,7 +38,7 @@ const participantsSchemaJoi = Joi.object({
     telegramId: Joi.string()
 });
 
-const addEventSchema = Joi.object({
+const eventSchemaJoi = Joi.object({
     _id: Joi.string().required(),
     date: Joi.string().isoDate().required(),
     groupTitle: Joi.string().required(),
@@ -48,7 +48,7 @@ const addEventSchema = Joi.object({
 });
 
 const schemas = {
-    addEventSchema
+    eventSchemaJoi
 };
 
 module.exports = {
