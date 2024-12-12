@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const validateBody = require('../middlevares/vaidateBody')
-const controllers =require('../controllers/eventsController')
+const controllers =require('../controllers/event/eventsController')
 const {schemas} = require('../models/eventModel')
 
 router.get('/', controllers.getAllEvents);

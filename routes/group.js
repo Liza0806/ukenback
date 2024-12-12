@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const validateBody = require('../middlevares/vaidateBody')
 const {schemas} = require('../models/groupModel')
-const controllers =require('../controllers/groupController')
+const controllers =require('../controllers/group/groupController')
 // const isAdmin = require('../middlevares/isAdmin')
 
 
