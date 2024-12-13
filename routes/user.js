@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const validateBody = require("../middlevares/vaidateBody");
 const { schemas } = require("../models/userModel");
-const controllers = require("../controllers/userController");
+const controllers = require("../controllers/user/userController");
 
 router.get("/", controllers.getAllUsers);
 router.get("/:id", controllers.getUserByUserId);

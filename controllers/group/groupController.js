@@ -4,46 +4,55 @@ const { Event } = require("../../models/eventModel");
 const { HttpError } = require("../../helpers/HttpError");
 const { User } = require("../../models/userModel");
 const { generateEventsForMonth } = require("../../plans/nextMonthEvent");
-const { isGroupScheduleSuitable,
+const {
+  isGroupScheduleSuitable,
   isGroupAlreadyExist,
-  isValidGroupData } = require('../../helpers/validators')
+  isValidGroupData,
+} = require("../../helpers/validators");
+
 /// Получить все группы
 const getAllGroups = async (req, res) => {
   try {
     const data = await Group.find({});
     res.json(data); // Статус 200 по умолчанию
   } catch (error) {
-    HttpError(500, `Failed to retrieve groups ${error.message}`);
+    console.error(error, "error");
+    res.status(500).json({ message: `Error getting groups: ${error.message}` });
+  
   }
 };
 
 /// Получить 1 по ид
 const getGroupById = async (req, res) => {
-  const {id} = req.params; // Получаем ID из параметров запроса
-//console.log(id, 'id in getGroupById')
+  const { id } = req.params; // Получаем ID из параметров запроса
+  //console.log(id, 'id in getGroupById')
   try {
-    const group = await Group.findOne({_id: id}); // Найти группу по ID
+    const group = await Group.findById({ _id: id }); // Найти группу по ID
 
     if (!group) {
       return res.status(404).json({ message: "Group not found" });
-
-      // return HttpError(404, "Group not found");
     }
 
     res.json(group);
   } catch (error) {
     return res
-    .status(500)
-    .json({ message: `Error getting group: ${error.message}` })
+      .status(500)
+      .json({ message: `Error getting group: ${error.message}` });
   }
 };
 
 const addGroup = async (req, res) => {
   const { title, coachId, payment, schedule, participants } = req.body;
-debugger
+  debugger;
   try {
     // Проверка валидности данных
-    const isValid = isValidGroupData({ title, payment, coachId, schedule, participants });
+    const isValid = isValidGroupData({
+      title,
+      payment,
+      coachId,
+      schedule,
+      participants,
+    });
     if (!isValid) {
       return res.status(400).json({ message: "Invalid group data" });
     }
@@ -56,13 +65,19 @@ debugger
 
     // Проверка расписания
     const scheduleCheck = await isGroupScheduleSuitable(schedule);
-    
+
     if (scheduleCheck) {
       return res.status(400).json({ message: scheduleCheck });
     }
 
     // Создание новой группы
-    const group = await Group.create({ title, coachId, payment, schedule, participants });
+    const group = await Group.create({
+      title,
+      coachId,
+      payment,
+      schedule,
+      participants,
+    });
     return res.status(201).json(group);
   } catch (err) {
     console.error("Error adding group:", err);
@@ -70,19 +85,23 @@ debugger
   }
 };
 
- 
-
 const updateGroup = async (req, res) => {
- // console.log(req.body, "updateGroup1");
+  // console.log(req.body, "updateGroup1");
   try {
     const { id } = req.params;
     const updateData = req.body;
     const { title, payment, coachId, schedule, participants } = req.body;
- // Проверка валидности данных
- const isValid = isValidGroupData({ title, payment, coachId, schedule, participants });
- if (!isValid) {
-   return res.status(400).json({ message: "Invalid group data" });
- }
+    // Проверка валидности данных
+    const isValid = isValidGroupData({
+      title,
+      payment,
+      coachId,
+      schedule,
+      participants,
+    });
+    if (!isValid) {
+      return res.status(400).json({ message: "Invalid group data" });
+    }
     const updatedGroup = await Group.findByIdAndUpdate(id, updateData, {
       new: true,
     });
@@ -96,12 +115,9 @@ const updateGroup = async (req, res) => {
     res.status(200).json({ updatedGroup, _id: id });
   } catch (err) {
     // Логируем и возвращаем ошибку
-    return res
-    .status(500)
-    .json({ message: `Internal Server Error:` });
+    return res.status(500).json({ message: `Internal Server Error:` });
   }
 };
-
 
 const deleteGroup = async (req, res) => {
   const { id } = req.params;
@@ -125,9 +141,10 @@ const deleteGroup = async (req, res) => {
     });
 
     // Формирование ответа
-    const eventMessage = result.deletedCount > 0 
-      ? "Associated future events successfully deleted" 
-      : "No associated future events found";
+    const eventMessage =
+      result.deletedCount > 0
+        ? "Associated future events successfully deleted"
+        : "No associated future events found";
 
     return res.status(200).json({
       message: `Group deleted. ${eventMessage}`,
@@ -138,7 +155,6 @@ const deleteGroup = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 /// добавить участника и удалить участника
 /// поиск по участникам

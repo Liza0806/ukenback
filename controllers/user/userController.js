@@ -1,25 +1,31 @@
-const { User } = require("../models/userModel");
-const { HttpError } = require("../helpers/HttpError");
+const { User } = require("../../models/userModel");
+const { HttpError } = require("../../helpers/HttpError");
 
 const getAllUsers = async (req, res) => {
-  const users = await User.find({});
-  if (!users || users.length === 0) {
-    return [];
+  try{
+    const users = await User.find({});
+    res.json(users);
   }
-  res.json(users);
-};
-
+  catch (error) {
+    console.error(error, "error");
+    res.status(500).json({ message: `Error getting users: ${error.message}` });
+  
+  }
+  };
+ 
 const getUserByUserId = async (req, res) => {
   const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ message: "Id is required" });
+  }
   try {
     const user = await User.findById(id);
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
     res.json(user);
   } catch (error) {
-    return res.status(500).json({ message: `Failed to retrieve user ${error.message}` });
-  //  HttpError(500, `Failed to retrieve user ${error.message}`);
+    return res.status(500).json({ message: `Error getting user: ${error.message}` });
   }
 };
 
@@ -57,7 +63,7 @@ const searchUsersByName = async (req, res) => {
     res.json(users);
   } catch (error) {
     console.error('Failed to retrieve user:', error.message);
-    return res.status(500).json({ message: `Failed to retrieve user ${error.message}` });
+    return res.status(500).json({ message: `Error getting user: ${error.message}` });
   }
 };
 
