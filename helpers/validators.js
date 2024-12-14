@@ -1,8 +1,10 @@
 const { Group } = require("../models/groupModel");
 
-const validateEvent = (schema, data) => {
+const validateData = (schema, data) => {
+  debugger
     const { error, value } = schema.validate(data, { abortEarly: false, stripUnknown: true });
     if (error) {
+      debugger
       throw new Error(`Validation error: ${error.details.map((d) => d.message).join(", ")}`);
     }
     return value;
@@ -73,7 +75,7 @@ const validateEvent = (schema, data) => {
   };
 
   module.exports = {
-    validateEvent,
+    validateData,
     isGroupScheduleSuitable,
     isGroupAlreadyExist,
     isValidGroupData,

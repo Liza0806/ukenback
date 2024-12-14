@@ -53,6 +53,14 @@ const registerSchema = Joi.object({
   telegramId: Joi.number().required(),
   balance: Joi.number().default(0),
 });
+const updateSchema = Joi.object({
+  name: Joi.string(),
+  phone: Joi.string().pattern(phoneRegexp),
+  groups: Joi.array(),
+  telegramId: Joi.number(),
+  balance: Joi.number(),
+  password: Joi.string().min(4), 
+});
 
 const loginSchema = Joi.object({
   password: Joi.string().required(),
@@ -60,6 +68,7 @@ const loginSchema = Joi.object({
 
 const schemas = {
   registerSchema,
+  updateSchema,
   loginSchema,
   addVisit,
 };

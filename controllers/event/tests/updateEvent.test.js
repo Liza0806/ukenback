@@ -1,10 +1,10 @@
 const { updateEvent } = require("../eventsController");
-const { validateEvent } = require("../../../helpers/validators");
+const { validateData } = require("../../../helpers/validators");
 const { Event } = require("../../../models/eventModel");
 const httpMocks = require("node-mocks-http");
 
 jest.mock("../../../helpers/validators", () => ({
-  validateEvent: jest.fn(),
+  validateData: jest.fn(),
 }));
 // Мокаем необходимые зависимости
 jest.mock("../../../models/eventModel", () => {
@@ -43,7 +43,7 @@ jest.mock("../../../models/eventModel", () => {
 
 jest.mock("../../../helpers/validators", () => {
   return {
-    validateEvent: jest.fn().mockImplementation(() => ({
+    validateData: jest.fn().mockImplementation(() => ({
       error: null,
       value: {
         _id: "111",
@@ -63,7 +63,6 @@ describe("updateEvent Controller", () => {
   });
 
   it("должен вернуть ошибку 500 при сбое базы данных", async () => {
-    //   const saveMock = jest.fn().mockRejectedValueOnce(new Error("Database error")); // Мокаем ошибку в save
     Event.mockImplementationOnce(() => {
       return {
         save: jest.fn().mockRejectedValueOnce(new Error("Database error")),
@@ -77,7 +76,7 @@ describe("updateEvent Controller", () => {
       date: new Date().toISOString(),
       participants: [],
     };
-    validateEvent.mockImplementationOnce(() => eventData);
+    validateData.mockImplementationOnce(() => eventData);
     Event.findById.mockResolvedValueOnce({
       _id: "111",
       group: "1",
@@ -123,7 +122,7 @@ describe("updateEvent Controller", () => {
     });
 
     // Мокаем функцию валидации, чтобы она выбрасывала ошибку
-    validateEvent.mockImplementationOnce(() => {
+    validateData.mockImplementationOnce(() => {
       throw new Error('Validation error: "group" is required');
     });
 
@@ -170,7 +169,7 @@ describe("updateEvent Controller", () => {
     Event.findById.mockResolvedValueOnce(eventData);
 
     // Мокаем функцию валидации
-    validateEvent.mockImplementationOnce(() => ({
+    validateData.mockImplementationOnce(() => ({
       _id: "111",
       group: "1",
       groupTitle: "Updated Title",

@@ -1,5 +1,5 @@
 const { Event, schemas } = require("../../models/eventModel");
-const { validateEvent } = require("../../helpers/validators");
+const { validateData } = require("../../helpers/validators");
 const { HttpError } = require("../../helpers/HttpError");
 
 // получить все тренировки из всех групп
@@ -104,7 +104,7 @@ const createEvent = async (req, res) => {
 
   try {
     // Выполняем валидацию
-    const validatedData = validateEvent(schemas.eventSchemaJoi, event);
+    const validatedData = validateData(schemas.eventSchemaJoi, event);
     // console.log(validatedData, 'validatedData'); // Логируем результат валидации
 
     const newEvent = new Event({
@@ -145,7 +145,7 @@ const updateEvent = async (req, res) => {
       return res.status(404).json({ message: "Event not found" });
     }
     // Выполняем валидацию
-    const validatedData = validateEvent(schemas.eventSchemaJoi, newEvent);
+    const validatedData = validateData(schemas.eventSchemaJoi, newEvent);
     // Обновляем событие валидированными данными
     Object.assign(event, validatedData);
 

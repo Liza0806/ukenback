@@ -1,5 +1,7 @@
-const { User } = require("../../models/userModel");
+const { User, schemas } = require("../../models/userModel");
 const { HttpError } = require("../../helpers/HttpError");
+const { validateData } = require("../../helpers/validators");
+const bcrypt = require("bcrypt");
 
 const getAllUsers = async (req, res) => {
   try{
@@ -67,27 +69,38 @@ const searchUsersByName = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res, next) => {
+const updateUser = async (req, res) => {
   try {
     const { userId } = req.params;
+    const { _id, name, phone, groups, balance, telegramId, password, discount, isAdmin, visits } = req.body;
 
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new NotFoundError("User not found");
+    const updateData = { _id, name, phone, groups, balance, telegramId, password, discount, isAdmin, visits };
+
+    // Валидация данных
+    const validatedData = validateData(schemas.updateSchema, updateData);
+
+    // Хэширование пароля, если он валиден
+    if (password && typeof password === "string" && password.length > 6) {
+      updateData.password = await bcrypt.hash(password, 10);
+    } else {
+      throw new Error("Invalid password");
     }
 
-    if (req.body.password) {
-      req.body.password = await bcrypt.hash(req.body.password, 10); // Хешируем пароль перед сохранением
+    // Поиск и обновление пользователя
+    const updatedUser = await User.findByIdAndUpdate(userId, validatedData, { new: true });
+
+    // Проверка, если пользователь не найден
+    if (!updatedUser) {
+      res.status(404).json({ message: "User not found" });
+      return;
     }
 
-    // Обновляем данные пользователя
-    const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
-      new: true, // возврат обновленных данных пользователя
-      runValidators: true, // валидаторы для новых данных
-    });
-
+    // Успешный ответ
     res.status(200).json({
       _id: updatedUser._id,
+      discount: updatedUser.discount,
+      isAdmin: updatedUser.isAdmin,
+      visits: updatedUser.visits,
       name: updatedUser.name,
       phone: updatedUser.phone,
       groups: updatedUser.groups,
@@ -98,9 +111,19 @@ const updateUser = async (req, res, next) => {
       updatedAt: updatedUser.updatedAt,
     });
   } catch (error) {
-    next(error);
+    if (error.message.startsWith("Validation error")) {
+      res.status(400).json({ message: error.message });
+    } else if (error.message === "Invalid password") {
+      res.status(400).json({ message: error.message });
+    } else {
+      console.error("Error during user update:", error);
+      res.status(500).json({ message: `Internal Server Error: ${error.message}` });
+    }
   }
 };
+
+
+
 const deleteUser = async (req, res, next) => {
   try {
     const { userId } = req.params;
