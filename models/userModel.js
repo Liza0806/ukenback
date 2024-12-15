@@ -47,11 +47,14 @@ const addVisit = Joi.object({
 
 const registerSchema = Joi.object({
   name: Joi.string().required(),
-  password: Joi.string().required(),
+  password: Joi.string().required().min(6),
   phone: Joi.string().pattern(phoneRegexp).required(),
   groups: Joi.array().default([]),
   telegramId: Joi.number().required(),
   balance: Joi.number().default(0),
+  isAdmin: Joi.boolean().default(false),
+  visits: Joi.array().default([]),
+  discount: Joi.number().default(0)
 });
 const updateSchema = Joi.object({
   name: Joi.string(),
@@ -59,7 +62,7 @@ const updateSchema = Joi.object({
   groups: Joi.array(),
   telegramId: Joi.number(),
   balance: Joi.number(),
-  password: Joi.string().min(4), 
+  password: Joi.string().min(6), 
 });
 
 const loginSchema = Joi.object({

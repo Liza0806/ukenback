@@ -4,17 +4,15 @@ const { validateData } = require("../../helpers/validators");
 const bcrypt = require("bcrypt");
 
 const getAllUsers = async (req, res) => {
-  try{
+  try {
     const users = await User.find({});
     res.json(users);
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error, "error");
     res.status(500).json({ message: `Error getting users: ${error.message}` });
-  
   }
-  };
- 
+};
+
 const getUserByUserId = async (req, res) => {
   const { id } = req.params;
   if (!id) {
@@ -27,11 +25,13 @@ const getUserByUserId = async (req, res) => {
     }
     res.json(user);
   } catch (error) {
-    return res.status(500).json({ message: `Error getting user: ${error.message}` });
+    return res
+      .status(500)
+      .json({ message: `Error getting user: ${error.message}` });
   }
 };
 
-// const searchUsersByName = async (req, res) => {
+// const getUsersByName = async (req, res) => {
 //   const { name } = req.query;
 //   if (!name) {
 //     return res.status(400).json({ message: "Name query parameter is required" });
@@ -48,14 +48,16 @@ const getUserByUserId = async (req, res) => {
 //     HttpError(500, `Failed to retrieve user ${error.message}`);
 //   }
 // };
-const searchUsersByName = async (req, res) => {
+const getUsersByName = async (req, res) => {
   const { name } = req.query;
   if (!name) {
-    return res.status(400).json({ message: "Name query parameter is required" });
+    return res
+      .status(400)
+      .json({ message: "Name query parameter is required" });
   }
   try {
     const users = await User.find({
-      name: { $regex: name, $options: "i" }
+      name: { $regex: name, $options: "i" },
     });
 
     if (users.length === 0) {
@@ -64,17 +66,41 @@ const searchUsersByName = async (req, res) => {
 
     res.json(users);
   } catch (error) {
-    console.error('Failed to retrieve user:', error.message);
-    return res.status(500).json({ message: `Error getting user: ${error.message}` });
+    console.error("Failed to retrieve user:", error.message);
+    return res
+      .status(500)
+      .json({ message: `Error getting user: ${error.message}` });
   }
 };
 
 const updateUser = async (req, res) => {
   try {
     const { userId } = req.params;
-    const { _id, name, phone, groups, balance, telegramId, password, discount, isAdmin, visits } = req.body;
+    const {
+      _id,
+      name,
+      phone,
+      groups,
+      balance,
+      telegramId,
+      password,
+      discount,
+      isAdmin,
+      visits,
+    } = req.body;
 
-    const updateData = { _id, name, phone, groups, balance, telegramId, password, discount, isAdmin, visits };
+    const updateData = {
+      _id,
+      name,
+      phone,
+      groups,
+      balance,
+      telegramId,
+      password,
+      discount,
+      isAdmin,
+      visits,
+    };
 
     // Валидация данных
     const validatedData = validateData(schemas.updateSchema, updateData);
@@ -87,7 +113,9 @@ const updateUser = async (req, res) => {
     }
 
     // Поиск и обновление пользователя
-    const updatedUser = await User.findByIdAndUpdate(userId, validatedData, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(userId, validatedData, {
+      new: true,
+    });
 
     // Проверка, если пользователь не найден
     if (!updatedUser) {
@@ -117,35 +145,41 @@ const updateUser = async (req, res) => {
       res.status(400).json({ message: error.message });
     } else {
       console.error("Error during user update:", error);
-      res.status(500).json({ message: `Internal Server Error: ${error.message}` });
+      res
+        .status(500)
+        .json({ message: `Internal Server Error: ${error.message}` });
     }
   }
 };
 
-
-
 const deleteUser = async (req, res, next) => {
+  const { userId } = req.params;
+  if(!userId) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
   try {
-    const { userId } = req.params;
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new NotFoundError("User not found");
+    const result = await User.findByIdAndDelete(userId);
+
+    if (!result) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    await User.findByIdAndDelete(userId);
-
-    res.status(200).json({ message: "User successfully deleted" });
-  } catch (error) {
-    next(error);
+    return res.status(200).json({ message: "User successfully deleted" });  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `Internal Server Error: ${error.message}` });
   }
 };
 
 const addVisit = async (req, res, next) => {
   const { userId } = req.params;
+  if(!userId) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
   try {
     const user = await User.findById(userId);
     if (!user) {
-      throw new NotFoundError("User not found");
+      return res.status(404).json({ message: "User not found" });
     }
 
     const newVisit = {
@@ -160,7 +194,9 @@ const addVisit = async (req, res, next) => {
 
     res.status(201).json(user.visits);
   } catch (error) {
-    next(error);
+    return res
+      .status(500)
+      .json({ message: `Internal Server Error: ${error.message}` });
   }
 };
 
@@ -172,15 +208,18 @@ const addVisit = async (req, res, next) => {
 
 const updateUserBalance = async (req, res, next) => {
   const { userId } = req.params;
+  if(!userId) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
   try {
     const user = await User.findById(userId);
     if (!user) {
-      throw new NotFoundError("User not found");
+      return res.status(404).json({ message: "User not found" });
     }
 
     const { balance } = req.body;
     if (balance === undefined || typeof balance !== "number") {
-      throw new BadRequestError("Invalid balance value");
+      throw new Error("Invalid balance value");
     }
 
     user.balance = balance;
@@ -191,7 +230,9 @@ const updateUserBalance = async (req, res, next) => {
       .status(200)
       .json({ message: "Balance updated successfully", balance: user.balance });
   } catch (error) {
-    next(error);
+    return res
+    .status(500)
+    .json({ message: `Internal Server Error: ${error.message}` });
   }
 };
 
@@ -201,27 +242,107 @@ const updateUserBalance = async (req, res, next) => {
 
 const getUserGroups = async (req, res, next) => {
   const { userId } = req.params;
+
+  if (!userId) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
+
   try {
     const user = await User.findById(userId);
     if (!user) {
-      throw new NotFoundError("User not found");
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const userGroups = user.groups;
+    const userGroups = user.groups || [];
+    if (userGroups.length === 0) {
+      return res.status(200).json({ message: "This user has no groups" });
+    }
 
-    res.status(200).json(userGroups);
+    return res.status(200).json(userGroups);
   } catch (error) {
-    next(error);
+    return res
+      .status(500)
+      .json({ message: `Internal Server Error: ${error.message}` });
+  }
+};
+
+
+const addUser = async (req, res) => {
+  const {
+    name,
+    phone,
+    groups,
+    balance,
+    telegramId,
+    password,
+    discount,
+    isAdmin,
+    visits,
+  } = req.body;
+
+  try {
+    // Формирование данных для регистрации
+    const registerData = {
+      name,
+      phone,
+      groups,
+      balance,
+      telegramId,
+      password,
+      discount,
+      isAdmin,
+      visits,
+    };
+
+    // Валидация данных
+    const validatedData = validateData(schemas.registerSchema, registerData);
+
+    // Хэширование пароля
+    if (password && typeof password === "string") {
+      if (password.length < 6) {
+        throw new Error("Password must be at least 6 characters long");
+      }
+      validatedData.password = await bcrypt.hash(password, 10);
+    } else {
+      throw new Error("Invalid password");
+    }
+
+    // Создание нового пользователя
+    const newUser = await User.create(validatedData);
+
+    // Успешный ответ
+    res.status(200).json({
+      discount: newUser.discount,
+      isAdmin: newUser.isAdmin,
+      visits: newUser.visits,
+      name: newUser.name,
+      phone: newUser.phone,
+      groups: newUser.groups,
+      balance: newUser.balance,
+      telegramId: newUser.telegramId,
+    });
+  } catch (error) {
+    if (error.message.startsWith("Validation error")) {
+      res.status(400).json({ message: error.message });
+    } else if (error.message === "Invalid password") {
+      res.status(400).json({ message: error.message });
+    } else {
+      console.error("Error during user creation:", error);
+      res
+        .status(500)
+        .json({ message: `Internal Server Error: ${error.message}` });
+    }
   }
 };
 
 module.exports = {
-  getAllUsers,
-  getUserByUserId,
-  updateUser,
-  deleteUser,
-  addVisit,
+  getAllUsers, //
+  getUserByUserId, //
+  getUsersByName, //
+  getUserGroups, //
+  updateUser, //
+  addUser, //
+  addVisit, //
   updateUserBalance,
-  getUserGroups,
-  searchUsersByName,
+  deleteUser, //
 };

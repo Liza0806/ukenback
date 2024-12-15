@@ -122,11 +122,6 @@ const updateGroup = async (req, res) => {
 const deleteGroup = async (req, res) => {
   const { id } = req.params;
 
-  // Проверка валидности id
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid group ID" });
-  }
-
   try {
     const deletedGroup = await Group.findByIdAndDelete(id);
 

@@ -1,8 +1,7 @@
-const { getUserByUserId } = require("../userController");
+const { getUserGroups } = require("../userController");
 const { User } = require("../../../models/userModel");
 const httpMocks = require("node-mocks-http");
 const mongoose = require("mongoose");
-const { date } = require("joi");
 
 jest.mock("../../../models/userModel.js", () => ({
   User: {
@@ -20,11 +19,11 @@ describe("getUserByUserId Controller", () => {
     User.findById.mockRejectedValueOnce(new Error("Database error"));
 
     const req = httpMocks.createRequest({
-      params: { id: "1" },
+      params: { userId: "1" },
     });
     const res = httpMocks.createResponse();
     // Вызываем контроллер
-    await getUserByUserId(req, res);
+    await getUserGroups(req, res);
 
     // Проверяем, что метод status был вызван с кодом 500
     expect(res.statusCode).toBe(500);
@@ -33,95 +32,76 @@ describe("getUserByUserId Controller", () => {
     const responseData = JSON.parse(res._getData());
  
     expect(responseData).toEqual({
-      message: "Error getting user: Database error",
+      message: "Internal Server Error: Database error",
     });
   });
   
   it('должен вернуть 400 если id не передано', async () => {
     const req = httpMocks.createRequest({
-        params: { id: undefined },
+        params: { userId: undefined },
       });
       const res = httpMocks.createResponse();
-      await getUserByUserId(req, res);
+      await getUserGroups(req, res);
       const responseData = JSON.parse(res._getData());
       expect(res.statusCode).toBe(400);
       expect(responseData).toEqual({
-        message: "Id is required",
+        message: "User ID is required",
       });
   });
-  it("должен вернуть 200 и юзера", async () => {
+  it("должен вернуть 200 и группы юзера", async () => {
     const mockUser =   {
         _id: "1",
         name: "userName 1",
         password: "111",
         phone: "11111",
         isAdmin: false,
-        groups: [],
+        groups: ['Group1', 'Group2'],
         balance: 11,
         telegramId: 111,
         discount: 11,
-        visits: [],
-      };
+        visits: [
+          {
+            date: "2024-12-15",
+            groupId: "60d21b7667d0d8992e610c85",
+            eventId: "60d21b7667d0d8992e610c86" 
+          },{ 
+          date: "2024-12-16",
+          groupId: "60d21b7667d0d8992e610c87",
+          eventId: "60d21b7667d0d8992e610c88" 
+        }
+      ]}
     await User.findById.mockResolvedValueOnce(mockUser); // Мок успешного ответа
 
     const req = httpMocks.createRequest({
-      params: { id: "1" },
+      params: { userId: "1" },
     });
     const res = httpMocks.createResponse();
 
-    await getUserByUserId(req, res);
+    await getUserGroups(req, res);
 
     expect(res.statusCode).toBe(200); // Проверяем, что статус 200
-    expect(res._getJSONData()).toEqual(mockUser); // Проверяем, что вернулись данные
-  });
-  it("должен вернуть юзера при успешном выполнении запроса", async () => {
-    const user = {
-      _id: "1",
-      name: "userName 1",
-      password: "111",
-      phone: "11111",
-      isAdmin: false,
-      groups: [],
-      balance: 11,
-      telegramId: 111,
-      discount: 11,
-      visits: [],
-    };
-  
-    User.findById = jest.fn().mockResolvedValueOnce(user);
-  
+    expect(res._getJSONData()).toEqual(mockUser.groups); // Проверяем, что вернулись данные
+  }); 
+   it("должен вернуть сообщение, если групп нет", async () => {
     const req = httpMocks.createRequest({
-      params: { id: "1" }, 
+      params: { userId: "1" },
     });
     const res = httpMocks.createResponse();
-
-    await getUserByUserId(req, res);
   
-
+    // Мокируем метод findById, чтобы вернуть пользователя без групп
+    User.findById = jest.fn().mockResolvedValueOnce({ groups: [] });
+  
+    await getUserGroups(req, res);
+  
     expect(res.statusCode).toBe(200);
-  
-    expect(JSON.parse(res._getData())).toEqual(user);
+    expect(res._getJSONData()).toEqual({ message: "This user has no groups" });
   });
   
-
-  it("должен вернуть пустой массив, если юзера нет", async () => {
-    const req = httpMocks.createRequest({
-      params: { id: "1" },
-    });
-    const res = httpMocks.createResponse();
-
-    await getUserByUserId(req, res);
-
-    expect(res.statusCode).toBe(404);
-    // console.log(res._getData())
-    expect(res._getJSONData()).toEqual({ message: "User not found" });
-  });
-
   it("должен установить правильные заголовки", async () => {
     const req = httpMocks.createRequest();
     const res = httpMocks.createResponse();
 
-    await getUserByUserId(req, res);
+    await getUserGroups(req, res);
 
     expect(res.getHeader("Content-Type")).toBe("application/json");
   });

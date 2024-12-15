@@ -12,18 +12,6 @@ describe("deleteGroup Controller", () => {
     jest.clearAllMocks();
   });
 
-  it("should return 400 if ID is invalid", async () => {
-    const req = httpMocks.createRequest({
-      params: { id: "invalid_id" },
-    });
-    const res = httpMocks.createResponse();
-
-    await deleteGroup(req, res);
-
-    expect(res.statusCode).toBe(400);
-    expect(res._getJSONData()).toEqual({ message: "Invalid group ID" });
-  });
-
   it("should return 404 if group is not found", async () => {
     const req = httpMocks.createRequest({
       params: { id: new mongoose.Types.ObjectId().toString() },

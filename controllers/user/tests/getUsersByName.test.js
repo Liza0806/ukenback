@@ -1,4 +1,4 @@
-const { searchUsersByName } = require("../userController");
+const { getUsersByName } = require("../userController");
 const { User } = require("../../../models/userModel");
 const httpMocks = require("node-mocks-http");
 const mongoose = require("mongoose");
@@ -10,7 +10,7 @@ jest.mock("../../../models/userModel.js", () => ({
   },
 }));
 
-describe("searchUsersByName Controller", () => {
+describe("getUsersByName Controller", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -24,7 +24,7 @@ describe("searchUsersByName Controller", () => {
     });
     const res = httpMocks.createResponse();
     // Вызываем контроллер
-    await searchUsersByName(req, res);
+    await getUsersByName(req, res);
 
     // Проверяем, что метод status был вызван с кодом 500
     expect(res.statusCode).toBe(500);
@@ -38,36 +38,39 @@ describe("searchUsersByName Controller", () => {
   });
 
   it("должен вернуть 200 и юзера", async () => {
-    const mockUser =   {
-        _id: "1",
-        name: "userName 1",
-        password: "111",
-        phone: "11111",
-        isAdmin: false,
-        groups: [],
-        balance: 11,
-        telegramId: 111,
-        discount: 11,
-        visits: [],
-      };
-    await User.find.mockResolvedValueOnce(mockUser); // Мок успешного ответа
-
+    const mockUser = {
+      _id: "1",
+      name: "userName 1",
+      password: "111",
+      phone: "11111",
+      isAdmin: false,
+      groups: [],
+      balance: 11,
+      telegramId: 111,
+      discount: 11,
+      visits: [],
+    };
+  
+    // Мок успешного ответа
+    User.find.mockResolvedValueOnce([mockUser]); // `find` возвращает массив
+  
     const req = httpMocks.createRequest({
-        query: { name: "userName 1" },
+      query: { name: "userName 1" },
     });
     const res = httpMocks.createResponse();
-
-    await searchUsersByName(req, res);
-
+  
+    // Передаем контроллер для выполнения
+    await getUsersByName(req, res);
+  
     expect(res.statusCode).toBe(200); // Проверяем, что статус 200
-    expect(res._getJSONData()).toEqual(mockUser); // Проверяем, что вернулись данные
+    expect(res._getJSONData()).toEqual([mockUser]); // Проверяем, что вернулись данные
   });
-  it('должен вернуть 400 если имя не передано', async () => {
+    it('должен вернуть 400 если имя не передано', async () => {
     const req = httpMocks.createRequest({
         query: { name: undefined },
       });
       const res = httpMocks.createResponse();
-      await searchUsersByName(req, res);
+      await getUsersByName(req, res);
       const responseData = JSON.parse(res._getData());
       expect(res.statusCode).toBe(400);
       expect(responseData).toEqual({
@@ -94,7 +97,7 @@ describe("searchUsersByName Controller", () => {
     });
     const res = httpMocks.createResponse();
 
-    await searchUsersByName(req, res);
+    await getUsersByName(req, res);
 
     expect(res.statusCode).toBe(200); // Проверяем, что статус 200
     expect(JSON.parse(res._getData())).toEqual(user) // Проверяем, что объект содержит нужное поле
@@ -109,7 +112,7 @@ describe("searchUsersByName Controller", () => {
     });
     const res = httpMocks.createResponse();
 
-    await searchUsersByName(req, res);
+    await getUsersByName(req, res);
 
     // Проверяем, что статус 404 и сообщение об ошибке корректны
     expect(res.statusCode).toBe(404);
@@ -120,7 +123,7 @@ describe("searchUsersByName Controller", () => {
     const req = httpMocks.createRequest();
     const res = httpMocks.createResponse();
 
-    await searchUsersByName(req, res);
+    await getUsersByName(req, res);
 
     expect(res.getHeader("Content-Type")).toBe("application/json");
   });
