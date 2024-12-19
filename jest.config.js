@@ -12,7 +12,7 @@ module.exports = {
     coverageDirectory: 'coverage',
   
     // Указывает, какие файлы включать для покрытия кода.
-    collectCoverageFrom: ['**/controllers/**/*.js'],
+    collectCoverageFrom: ['**/controllers/**/*.js', '**/models/**/*.js'],
   
     // Опционально: Массив расширений модулей, которые Jest должен поддерживать.
     moduleFileExtensions: ['js', 'json', 'node'],
@@ -24,6 +24,5 @@ module.exports = {
   
     // Позволяет выводить больше информации о процессе тестирования.
     verbose: true,
-    testMatch: ['**/controllers/**/*.test.js'],
   };
   

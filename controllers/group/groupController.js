@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 const { Group } = require("../../models/groupModel");
 const { Event } = require("../../models/eventModel");
-const { HttpError } = require("../../helpers/HttpError");
+const { HttpError,makeScheduleForNewGroup } = require("../../helpers/HttpError");
 const { User } = require("../../models/userModel");
-const { generateEventsForMonth } = require("../../plans/nextMonthEvent");
 const {
   isGroupScheduleSuitable,
   isGroupAlreadyExist,
@@ -40,12 +39,10 @@ const getGroupById = async (req, res) => {
       .json({ message: `Error getting group: ${error.message}` });
   }
 };
-
 const addGroup = async (req, res) => {
   const { title, coachId, payment, schedule, participants } = req.body;
-  debugger;
+
   try {
-    // Проверка валидности данных
     const isValid = isValidGroupData({
       title,
       payment,
@@ -57,20 +54,16 @@ const addGroup = async (req, res) => {
       return res.status(400).json({ message: "Invalid group data" });
     }
 
-    // Проверка, существует ли уже группа с таким названием
     const groupExists = await isGroupAlreadyExist({ title });
     if (groupExists) {
       return res.status(400).json({ message: "This title already exists" });
     }
 
-    // Проверка расписания
     const scheduleCheck = await isGroupScheduleSuitable(schedule);
-
     if (scheduleCheck) {
       return res.status(400).json({ message: scheduleCheck });
     }
 
-    // Создание новой группы
     const group = await Group.create({
       title,
       coachId,
@@ -78,12 +71,24 @@ const addGroup = async (req, res) => {
       schedule,
       participants,
     });
-    return res.status(201).json(group);
+
+    const currentDate = new Date();
+    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+    // Генерация событий с помощью вынесенной функции
+    const events = makeScheduleForNewGroup(schedule, currentDate, endOfMonth, title, group._id.toString());
+
+    if (events.length > 0) {
+      await Event.insertMany(events);
+    }
+
+    return res.status(201).json({ group, events });
   } catch (err) {
     console.error("Error adding group:", err);
     return res.status(500).json({ message: "Server error" });
   }
 };
+
 
 const updateGroup = async (req, res) => {
   // console.log(req.body, "updateGroup1");

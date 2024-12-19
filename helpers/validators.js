@@ -48,7 +48,8 @@ const validateData = (schema, data) => {
             time: { $in: schedule.map((s) => s.time) },
           },
         },
-      }).exec();
+      }).exec(); // Ensure this is correctly called
+      console.log(groups, 'groups')
   
       if (groups.length > 0) {
         for (const group of groups) {
@@ -58,19 +59,18 @@ const validateData = (schema, data) => {
                 existingSchedule.day === newSchedule.day &&
                 existingSchedule.time === newSchedule.time
               ) {
-                // Возвращаем сообщение об ошибке с указанием объекта
-                return `Conflict detected: ${JSON.stringify(
-                  newSchedule
-                )} exists in group '${group.title}'`;
+                // Return conflict message
+                return `Conflict detected: ${JSON.stringify(newSchedule)} exists in group '${group.title}'`;
               }
             }
           }
         }
       }
+  
       return null;
     } catch (error) {
       console.error("Error in isGroupScheduleSuitable function:", error);
-      throw new Error("Error checking schedule suitability");
+      throw new Error(`Error checking schedule suitability: ${error.message}`);
     }
   };
 
