@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 const { Group } = require("../../models/groupModel");
 const { Event } = require("../../models/eventModel");
-const { HttpError,makeScheduleForNewGroup } = require("../../helpers/HttpError");
+const {
+  makeScheduleForNewGroup,
+} = require("../../helpers/makeScheduleForNewGroup");
 const { User } = require("../../models/userModel");
 const {
   isGroupScheduleSuitable,
@@ -17,7 +19,6 @@ const getAllGroups = async (req, res) => {
   } catch (error) {
     console.error(error, "error");
     res.status(500).json({ message: `Error getting groups: ${error.message}` });
-  
   }
 };
 
@@ -50,17 +51,21 @@ const addGroup = async (req, res) => {
       schedule,
       participants,
     });
+    debugger;
     if (!isValid) {
+      debugger;
       return res.status(400).json({ message: "Invalid group data" });
     }
 
     const groupExists = await isGroupAlreadyExist({ title });
     if (groupExists) {
+      debugger;
       return res.status(400).json({ message: "This title already exists" });
     }
 
     const scheduleCheck = await isGroupScheduleSuitable(schedule);
     if (scheduleCheck) {
+      debugger;
       return res.status(400).json({ message: scheduleCheck });
     }
 
@@ -71,24 +76,42 @@ const addGroup = async (req, res) => {
       schedule,
       participants,
     });
-
+debugger
     const currentDate = new Date();
-    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-
+    const endOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0
+    );
+    debugger;
     // Генерация событий с помощью вынесенной функции
-    const events = makeScheduleForNewGroup(schedule, currentDate, endOfMonth, title, group._id.toString());
-
+    const events = makeScheduleForNewGroup(
+      schedule,
+      currentDate,
+      endOfMonth,
+      title,
+      group._id.toString()
+    );
+    debugger;
     if (events.length > 0) {
+      debugger;
       await Event.insertMany(events);
     }
-
-    return res.status(201).json({ group, events });
+    debugger;
+    res.status(201).json({
+        _id: group._id,
+        coachId: group.coachId,
+        participants: group.participants,
+        payment: group.payment,
+        schedule: group.schedule,
+        title: group.title,
+    });
   } catch (err) {
+    debugger;
     console.error("Error adding group:", err);
     return res.status(500).json({ message: "Server error" });
   }
 };
-
 
 const updateGroup = async (req, res) => {
   // console.log(req.body, "updateGroup1");

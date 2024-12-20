@@ -1,11 +1,14 @@
 const { addGroup } = require("../groupController");
 const { Group } = require("../../../models/groupModel");
+const { Event } = require("../../../models/eventModel");
 const {
   isValidGroupData,
   isGroupAlreadyExist,
   isGroupScheduleSuitable,
 } = require("../../../helpers/validators");
-
+const {
+  makeScheduleForNewGroup
+} = require("../../../helpers/makeScheduleForNewGroup");
 const httpMocks = require("node-mocks-http");
 
 jest.mock("../../../helpers/validators", () => ({
@@ -13,7 +16,9 @@ jest.mock("../../../helpers/validators", () => ({
   isGroupAlreadyExist: jest.fn(),
   isGroupScheduleSuitable: jest.fn(),
 }));
-
+jest.mock("../../../helpers/makeScheduleForNewGroup.js", () => ({
+  makeScheduleForNewGroup: jest.fn(),
+}));
 jest.mock("../../../models/groupModel", () => ({
   Group: {
     find: jest.fn(),
@@ -24,19 +29,30 @@ jest.mock("../../../models/groupModel", () => ({
     findByIdAndDelete: jest.fn(),
   },
 }));
+jest.mock("../../../models/eventModel.js", () => ({
+  Event: {
+    insertMany: jest.fn(),
+  },
+}));
 const mockData = {
   _id: "1",
   title: "Group 1",
   coachId: "coach1",
   payment: [],
-  schedule: [],
+  schedule: [
+    { day: "Monday", time: "10:00" },
+    { day: "Wednesday", time: "15:30" },
+  ],
   participants: [],
 };
 const mockDataPart = {
   title: "Group 1",
   coachId: "coach1",
   payment: [],
-  schedule: [],
+  schedule: [
+    { day: "Monday", time: "10:00" },
+    { day: "Wednesday", time: "15:30" },
+  ],
   participants: [],
 };
 
@@ -112,10 +128,13 @@ describe("addGroup Controller", () => {
       body: mockDataPart,
     });
     const res = httpMocks.createResponse();
-
- 
+    const events = [
+      { date: new Date().toISOString(), group: "Group 1", isCancelled: false, participants: [] },
+      { date: new Date().toISOString(), group: "Group 2", isCancelled: false, participants: [] },
+    ];
+    makeScheduleForNewGroup.mockReturnValue(events);
     isValidGroupData.mockReturnValue(true);
-    Group.create.mockResolvedValue(mockDataPart);
+    Group.create.mockResolvedValue(mockData);
 
     await addGroup(req, res);
 
@@ -123,7 +142,7 @@ describe("addGroup Controller", () => {
     expect(Group.create).toHaveBeenCalledWith(mockDataPart);
     expect(res.statusCode).toBe(201);
     const responseData = JSON.parse(res._getData());
-    expect(responseData).toEqual(mockDataPart);
+    expect(responseData).toEqual(mockData);
   });
 
   it("should return 400 if group data is invalid", async () => {
