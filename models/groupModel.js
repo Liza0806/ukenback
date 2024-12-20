@@ -66,7 +66,7 @@ const groupSchema = new Schema({
 payment: [paymentSchema],
 schedule: [scheduleSchema],
 participants: [participantsSchema],
-});
+},{ timestamps: true });
 
 const scheduleSchemaJoi = Joi.object({
   _id: Joi.string(),
@@ -87,7 +87,7 @@ const participantsSchemaJoi = Joi.object({
 })
 const addGroupSchema = Joi.object({
   // _id: Joi.string(),
-  title: Joi.string().default('newGroupTitle'),
+  title: Joi.string().default('newGroupTitle').required(),
   coachId: Joi.string().default('Kostya'),
   payment: Joi.array().items(paymentSchemaJoi).default([]),
   schedule: Joi.array().items(scheduleSchemaJoi).default([]),

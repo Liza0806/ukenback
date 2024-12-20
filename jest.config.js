@@ -21,7 +21,7 @@ module.exports = {
     moduleNameMapper: {
       '^@/(.*)$': '<rootDir>/$1',
     },
-  
+    testTimeout: 20000,
     // Позволяет выводить больше информации о процессе тестирования.
     verbose: true,
   };

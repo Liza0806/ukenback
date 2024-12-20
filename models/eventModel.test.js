@@ -1,14 +1,29 @@
 const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const { Event } = require('./eventModel');
-const { DB_HOST } = require('../config');
+const { schemas } = require('./eventModel');
+
+let mongoServer;
+
 describe('Event Model', () => {
   beforeAll(async () => {
-    await mongoose.connect(DB_HOST);
+  
+    jest.setTimeout(20000); 
+    mongoServer = await MongoMemoryServer.create();
+    const uri = mongoServer.getUri();
+
+    // Подключаем Mongoose к in-memory MongoDB
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
   });
 
   afterAll(async () => {
-   // await mongoose.connection.dropDatabase();
+    // Отключаем Mongoose и остановливаем сервер
+    await mongoose.connection.dropDatabase();
     await mongoose.connection.close();
+    await mongoServer.stop();
   });
 
   it('should save a valid event', async () => {
@@ -17,7 +32,7 @@ describe('Event Model', () => {
       date: "2024-12-31T10:00:00.000Z",
       groupTitle: "Group A",
       groupId: "g1",
-      participants: [{ id: "u1", name: "John Doe", telegramId: "123456" }]
+      participants: [{ id: "u1", name: "John Doe", telegramId: "123456" }],
     });
 
     const savedEvent = await validEvent.save();
@@ -36,8 +51,6 @@ describe('Event Model', () => {
     await expect(invalidEvent.save()).rejects.toThrow();
   });
 });
-
-const { schemas } = require('./eventModel');
 
 describe('Joi Validation for Event', () => {
   const validEvent = {
@@ -62,7 +75,7 @@ describe('Joi Validation for Event', () => {
 
     const { error } = schemas.eventSchemaJoi.validate(invalidEvent);
     expect(error).toBeDefined();
-    expect(error.details[0].message).toMatch(/_id is required/);
+    expect(error.details[0].message).toMatch("\"_id\" is required");
   });
 
   it('should throw error if date is not in ISO format', () => {
@@ -73,7 +86,7 @@ describe('Joi Validation for Event', () => {
 
     const { error } = schemas.eventSchemaJoi.validate(invalidEvent);
     expect(error).toBeDefined();
-    expect(error.details[0].message).toMatch(/must be in ISO 8601 date format/);
+    expect(error.details[0].message).toMatch( "\"date\" must be in iso format");
   });
 
   it('should set default values for missing optional fields', () => {
@@ -86,7 +99,7 @@ describe('Joi Validation for Event', () => {
 
     const { error, value } = schemas.eventSchemaJoi.validate(eventWithoutDefaults);
     expect(error).toBeUndefined();
-    expect(value.isCancelled).toBe(false); 
-    expect(value.participants).toEqual([]); 
+    expect(value.isCancelled).toBe(false);
+    expect(value.participants).toEqual([]);
   });
 });

@@ -35,7 +35,36 @@ const groups = [
       participants: [],
     },
   ];
-
+  const validEvent = new Group({
+    _id: "1",
+    title: "Group 1",
+    coachId: "coach1",
+    payment: [{
+        _id: "pay1",
+        dailyPayment: 500,
+        monthlyPayment: 10000
+      }],
+    schedule: [
+        { day: "Monday", time: "10:00" },
+        { day: "Wednesday", time: "15:30" },
+      ],
+    participants: [{
+        _id: "p1",
+        name: "John Doe",
+        telegramId: 123456789
+      },
+      {
+        _id: "p2",
+        name: "Jane Doe",
+        telegramId: 123456790
+      },
+      {
+        _id: "p3",
+        name: "Justin Doe",
+        telegramId: 123456791
+      }
+    ],
+  });
   const users= [ //: User[] 
       {
         _id: "1",
