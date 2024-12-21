@@ -91,6 +91,6 @@ describe("getEventsByGroup Controller", () => {
     // Проверяем, что вернулись правильные данные
     const responseData = JSON.parse(res._getData());
     expect(responseData).toEqual(mockEvent);
-    expect(Event.find).toHaveBeenCalledWith({ group: "1" });
+    expect(Event.find).toHaveBeenCalledWith({ groupId: "1" });
   });
 });

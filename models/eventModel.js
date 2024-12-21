@@ -4,10 +4,10 @@ const { handleMongooseError } = require("../helpers/handleMongooseError");
 const Joi = require('joi'); 
 
 const eventSchema = new Schema({
-    _id: {
-        type: String, 
-        required: true
-    },
+    // _id: {
+    //     type: String, 
+    //     required: false
+    // },
     date: {
         type: String,
         required: true
@@ -39,6 +39,14 @@ const participantsSchemaJoi = Joi.object({
 });
 
 const eventSchemaJoi = Joi.object({
+    //_id: Joi.string().required(),
+    date: Joi.string().isoDate().required(),
+    groupTitle: Joi.string().required(),
+    groupId: Joi.string().required(),
+    isCancelled: Joi.boolean().default(false), 
+    participants: Joi.array().items(participantsSchemaJoi).default([]),
+});
+const updateEventSchemaJoi = Joi.object({
     _id: Joi.string().required(),
     date: Joi.string().isoDate().required(),
     groupTitle: Joi.string().required(),
@@ -48,7 +56,8 @@ const eventSchemaJoi = Joi.object({
 });
 
 const schemas = {
-    eventSchemaJoi
+    eventSchemaJoi,
+    updateEventSchemaJoi
 };
 
 module.exports = {

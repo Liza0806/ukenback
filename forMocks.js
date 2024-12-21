@@ -35,7 +35,7 @@ const groups = [
       participants: [],
     },
   ];
-  const validEvent = new Group({
+  const validGroup = {
     _id: "1",
     title: "Group 1",
     coachId: "coach1",
@@ -64,7 +64,7 @@ const groups = [
         telegramId: 123456791
       }
     ],
-  });
+  };
   const users= [ //: User[] 
       {
         _id: "1",

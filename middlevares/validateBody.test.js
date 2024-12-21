@@ -1,16 +1,13 @@
 // Import required modules
-const validateBody = require('./vaidateBody'); // Укажите правильный путь к файлу с функцией
+const validateBody = require('./vaidateBody'); 
 const { HttpError } = require('../helpers/HttpError');
 const Joi = require('joi');
 const httpMocks = require('node-mocks-http');
-jest.mock('../helpers/HttpError', () => {
-    return jest.fn((statusCode, message) => ({
-        statusCode,
-        message,
-    }));
-});
+jest.mock('../helpers/HttpError', () => ({
+  HttpError: jest.fn((status, message) => new Error(message))
+}));
+
 describe('validateBody Middleware', () => {
-  // Define a sample Joi schema for testing
   const sampleSchema = Joi.object({
     name: Joi.string().required(),
     age: Joi.number().required(),
@@ -41,7 +38,7 @@ describe('validateBody Middleware', () => {
     const validate = validateBody(sampleSchema);
     validate(req, res, next);
 
-   // expect(HttpError).toHaveBeenCalledWith(400, expect.any(String)); !!!!!!!!!!
+    expect(HttpError).toHaveBeenCalledWith(400); 
     expect(next).toHaveBeenCalledWith(expect.anything());
   });
 

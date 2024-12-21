@@ -24,7 +24,7 @@ const makeScheduleForNewGroup = (scheduleFromGroup, currentDate, endOfMonth, tit
         date.setUTCDate(date.getUTCDate() + 7); // Переход на следующую неделю
       }
     });
-  
+  console.log(events, 'events in makeScheduleForNewGroup')
     return events;
   };
   

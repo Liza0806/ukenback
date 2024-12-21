@@ -8,9 +8,12 @@ const errorMessageList = {
   };
   
   const HttpError = (status, message = errorMessageList[status]) => {
+    debugger
     console.log(message);
     const error = new Error(message);
+    debugger
     error.status = status;
+    debugger
     return error;
   };
   

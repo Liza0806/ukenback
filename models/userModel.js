@@ -49,19 +49,23 @@ const registerSchema = Joi.object({
   name: Joi.string().required(),
   password: Joi.string().required().min(6),
   phone: Joi.string().pattern(phoneRegexp).required(),
-  groups: Joi.array().default([]),
   telegramId: Joi.number().required(),
+  groups: Joi.array().default([]),
   balance: Joi.number().default(0),
   isAdmin: Joi.boolean().default(false),
   visits: Joi.array().default([]),
   discount: Joi.number().default(0)
 });
 const updateSchema = Joi.object({
+  _id: Joi.string(),
   name: Joi.string(),
   phone: Joi.string().pattern(phoneRegexp),
   groups: Joi.array(),
   telegramId: Joi.number(),
+  isAdmin: Joi.boolean(),
+  discount: Joi.number(),
   balance: Joi.number(),
+  visits: Joi.array(),
   password: Joi.string().min(6), 
 });
 

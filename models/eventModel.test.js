@@ -28,7 +28,7 @@ describe('Event Model', () => {
 
   it('should save a valid event', async () => {
     const validEvent = new Event({
-      _id: "1",
+     // _id: "1",
       date: "2024-12-31T10:00:00.000Z",
       groupTitle: "Group A",
       groupId: "g1",
@@ -36,7 +36,7 @@ describe('Event Model', () => {
     });
 
     const savedEvent = await validEvent.save();
-    expect(savedEvent._id).toBe("1");
+    expect(savedEvent._id).toBeDefined();
     expect(savedEvent.isCancelled).toBe(false); // Default value
     expect(savedEvent.participants).toHaveLength(1);
     expect(savedEvent.createdAt).toBeDefined();
@@ -54,7 +54,7 @@ describe('Event Model', () => {
 
 describe('Joi Validation for Event', () => {
   const validEvent = {
-    _id: "1",
+ //   _id: "1",
     date: "2024-12-31T10:00:00.000Z",
     groupTitle: "Group A",
     groupId: "g1",
@@ -75,7 +75,7 @@ describe('Joi Validation for Event', () => {
 
     const { error } = schemas.eventSchemaJoi.validate(invalidEvent);
     expect(error).toBeDefined();
-    expect(error.details[0].message).toMatch("\"_id\" is required");
+    expect(error.details[0].message).toMatch("\"groupTitle\" is required");
   });
 
   it('should throw error if date is not in ISO format', () => {
@@ -91,7 +91,7 @@ describe('Joi Validation for Event', () => {
 
   it('should set default values for missing optional fields', () => {
     const eventWithoutDefaults = {
-      _id: "2",
+  //    _id: "2",
       date: "2024-12-31T10:00:00.000Z",
       groupTitle: "Group B",
       groupId: "g2",

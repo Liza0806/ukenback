@@ -20,7 +20,7 @@ describe("getUserByUserId Controller", () => {
     User.findById.mockRejectedValueOnce(new Error("Database error"));
 
     const req = httpMocks.createRequest({
-      params: { id: "1" },
+      params: { userId: "1" },
     });
     const res = httpMocks.createResponse();
     // Вызываем контроллер
@@ -39,7 +39,7 @@ describe("getUserByUserId Controller", () => {
   
   it('должен вернуть 400 если id не передано', async () => {
     const req = httpMocks.createRequest({
-        params: { id: undefined },
+        params: { userId: undefined },
       });
       const res = httpMocks.createResponse();
       await getUserByUserId(req, res);
@@ -65,7 +65,7 @@ describe("getUserByUserId Controller", () => {
     await User.findById.mockResolvedValueOnce(mockUser); // Мок успешного ответа
 
     const req = httpMocks.createRequest({
-      params: { id: "1" },
+      params: { userId: "1" },
     });
     const res = httpMocks.createResponse();
 
@@ -91,7 +91,7 @@ describe("getUserByUserId Controller", () => {
     User.findById = jest.fn().mockResolvedValueOnce(user);
   
     const req = httpMocks.createRequest({
-      params: { id: "1" }, 
+      params: { userId: "1" }, 
     });
     const res = httpMocks.createResponse();
 
@@ -106,7 +106,7 @@ describe("getUserByUserId Controller", () => {
 
   it("должен вернуть пустой массив, если юзера нет", async () => {
     const req = httpMocks.createRequest({
-      params: { id: "1" },
+      params: { userId: "1" },
     });
     const res = httpMocks.createResponse();
 

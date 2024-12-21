@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { User } = require('./userModel');
-const { schemas } = require('./groupModel');
+const { schemas } = require('./userModel');
 
 let mongoServer;
 
-describe('Group Model', () => {
+describe('User Model', () => {
   beforeAll(async () => {
     // ждем иногда долго, не убирай
     jest.setTimeout(20000); 
@@ -26,145 +26,115 @@ describe('Group Model', () => {
     await mongoServer.stop();
   });
 
-  it('should save a valid group', async () => {
-    const validGroup = new Group({
-        _id: "64dfc28c16f1e2d5c8e2b6a7",
-        title: "Group 1",
-        coachId: "coach1",
-        payment: [{
-            _id: "pay1",
-            dailyPayment: 500,
-            monthlyPayment: 10000
-          }],
-        schedule: [
-            { day: "Monday", time: "10:00" },
-            { day: "Wednesday", time: "15:30" },
-          ],
-        participants: [{
-            _id: "p1",
-            name: "John Doe",
-            telegramId: 123456789
-          },
-          {
-            _id: "p2",
-            name: "Jane Doe",
-            telegramId: 123456790
-          },
-          {
-            _id: "p3",
-            name: "Justin Doe",
-            telegramId: 123456791
-          }
-        ],
+  it('should save a valid user', async () => {
+    const validUser = new User({
+        name: "userName 1",
+        password: "111",
+        phone: "+3801111111",
+        isAdmin: false,
+        groups: [],
+        balance: 11,
+        telegramId: 111,
+        visits: [],
       });
 
-    const savedGroup = await validGroup.save();
-    expect(savedGroup._id.equals("64dfc28c16f1e2d5c8e2b6a7")).toBe(true);
-    expect(savedGroup.coachId).toBe('coach1'); // Default value
-    expect(savedGroup.participants).toHaveLength(3);
-    expect(savedGroup.createdAt).toBeDefined();
-    expect(savedGroup.updatedAt).toBeDefined();
+    const savedUser = await validUser.save();
+   // expect(savedUser._id.equals("64dfc28c16f1e2d5c8e2b6a7")).toBe(true);
+    expect(savedUser.name).toBe("userName 1"); 
+    expect(savedUser.password).toBe("111");
+    expect(savedUser.discount).toBe(0);
+    expect(savedUser.telegramId).toBe(111);
+    expect(savedUser.visits).toEqual([]);
+    expect(savedUser.createdAt).toBeDefined();
+    expect(savedUser.updatedAt).toBeDefined();
   });
   
   it('should throw validation error for missing required fields', async () => {
-    // Create a group instance missing required fields
-    const invalidGroup = new Group({
-      title: "newGroupTitle",
-      coachId: "Kostya",
-      // Intentionally leave out 'schedule' and 'participants' fields
+    // Create a user instance missing required fields
+    const invalidUser = new User({
+      name: "newUserTitle",
+      // Intentionally leave out 'password' and 'telegramId' fields
     });
-  
-    // Save the group and expect it to throw validation errors
+
     try {
-      await invalidGroup.save();
+      await invalidUser.save();
     } catch (error) {
       expect(error).toBeDefined();
-      expect(error.errors['schedule']).toBeDefined();
-      expect(error.errors['participants']).toBeDefined();
+      expect(error.errors['password']).toBeDefined(); // Check for password field error
+      expect(error.errors['telegramId']).toBeDefined(); // Check for telegramId field error
     }
   });  });
   
 
-describe('Joi Validation for Group', () => {
-  const validGroup = {
-//    _id: "1",
-    title: "Group 1",
-    coachId: "coach1",
-    payment: [{
-        _id: "pay1",
-        dailyPayment: 500,
-        monthlyPayment: 10000
-      }],
-    schedule: [
-        { day: "Monday", time: "10:00" },
-        { day: "Wednesday", time: "15:30" },
-      ],
-    participants: [{
-        _id: "p1",
-        name: "John Doe",
-        telegramId: 123456789
-      },
-      {
-        _id: "p2",
-        name: "Jane Doe",
-        telegramId: 123456790
-      },
-      {
-        _id: "p3",
-        name: "Justin Doe",
-        telegramId: 123456791
-      }
-    ],
+describe('Joi Validation for User', () => {
+  const validUser = {
+    name: "userName 1",
+    password: "111222",
+    phone: "+3801111111",
+    discount: 0,
+    isAdmin: false,
+    groups: [],
+    balance: 11,
+    telegramId: 111,
+    visits: [],
   };
 
   it('should validate a valid group object', () => {
-    const { error, value } = schemas.addGroupSchema.validate(validGroup);
+    const { error, value } = schemas.registerSchema.validate(validUser);
     expect(error).toBeUndefined();
-    expect(value).toEqual(validGroup);
+    expect(value).toEqual(validUser);
   });
 
   it('should throw error if required fields are missing', () => {
-    const invalidGroup = {
-        coachId: "2024-12-31T10:00:00.000Z", 
+    const invalidUser = {
+        name: "newUserTitle",
+        // Intentionally leave out 'password' and 'telegramId' fields
     };
 
-    const { error } = schemas.addGroupSchema.validate(invalidGroup);
+    const { error } = schemas.registerSchema.validate(invalidUser);
     expect(error).toBeDefined();
-    expect(error.details[0].message).toMatch("\"title\" is required");
+    expect(error.details[0].message).toMatch("\"password\" is required");
   });
 
   it('should throw error if add fields which not allowed', () => {
-    const invalidGroup = {
-        title:'111',
-      date: "2024-12-31T10:00:00.000Z", 
+    const invalidUser = {
+        name: "newUserTitle",
+        password: '111333',
+        phone: "+3801111111",
+        telegramId: 111,
+        date: '11/11/24' // not allowed
     };
 
-    const { error } = schemas.addGroupSchema.validate(invalidGroup);
+    const { error } = schemas.registerSchema.validate(invalidUser);
     expect(error).toBeDefined();
     expect(error.details[0].message).toMatch("\"date\" is not allowed");
   });
 
   it('should throw error if date is not in ISO format', () => {
-    const invalidGroup = {
-      ...validGroup,
-      payment: "12/31/2024", // Invalid payment format
+    const invalidUser = {
+      ...validUser,
+      telegramId: "12/31/2024", // Invalid payment format
     };
 
-    const { error } = schemas.addGroupSchema.validate(invalidGroup);
+    const { error } = schemas.registerSchema.validate(invalidUser);
     expect(error).toBeDefined();
-    expect(error.details[0].message).toMatch( "\"payment\" must be an array");
+    expect(error.details[0].message).toMatch( "\"telegramId\" must be a number");
   });
 
   it('should set default values for missing optional fields', () => {
-    const groupWithoutDefaults = {
-      title: "newGroupTitle",
+    const userWithoutDefaults = {
+        name: "newUserTitle",
+        password: '111333',
+        phone: "+3801111111",
+        telegramId: 111,
     };
 
-    const { error, value } = schemas.addGroupSchema.validate(groupWithoutDefaults);
+    const { error, value } = schemas.registerSchema.validate(userWithoutDefaults);
     expect(error).toBeUndefined();
-    expect(value.coachId).toBe("Kostya");
-    expect(value.payment).toEqual([]);
-    expect(value.payment).toEqual([]);
-    expect(value.participants).toEqual([]);
+    expect(value.balance).toBe(0);
+    expect(value.groups).toEqual([]);
+    expect(value.visits).toEqual([]);
+    expect(value.isAdmin).toEqual(false);
+    expect(value.discount).toEqual(0);
   });
 });

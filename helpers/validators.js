@@ -29,10 +29,13 @@ const validateData = (schema, data) => {
   };
 
   const isGroupAlreadyExist = async ({ title }) => {
+    debugger
     try {
+      debugger
       const group = await Group.findOne({ title });
       return group !== null; // Возвращаем true, если группа существует
     } catch (error) {
+      debugger
       console.error("Error in isGroupAlreadyExist function:", error);
       throw new Error("Failed to check if group exists");
     }
@@ -66,9 +69,10 @@ const validateData = (schema, data) => {
           }
         }
       }
-  
+  debugger
       return null;
     } catch (error) {
+      debugger
       console.error("Error in isGroupScheduleSuitable function:", error);
       throw new Error(`Error checking schedule suitability: ${error.message}`);
     }

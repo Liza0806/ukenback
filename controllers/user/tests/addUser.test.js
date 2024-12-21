@@ -157,12 +157,12 @@ describe("addUser Controller", () => {
     );
 
     // Проверяем статус ответа
-    expect(res.statusCode).toBe(200);
+    expect(res.statusCode).toBe(201);
 
     // Проверяем тело ответа
     const responseData = JSON.parse(res._getData());
     expect(responseData).toEqual({
-
+      _id: '1',
       name: "userName 1",
       phone: "11111",
       discount: 11,

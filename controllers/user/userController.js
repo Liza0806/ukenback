@@ -14,12 +14,12 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUserByUserId = async (req, res) => {
-  const { id } = req.params;
-  if (!id) {
+  const { userId } = req.params;
+  if (!userId) {
     return res.status(400).json({ message: "Id is required" });
   }
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -74,10 +74,10 @@ const getUsersByName = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+  debugger
   try {
     const { userId } = req.params;
     const {
-      _id,
       name,
       phone,
       groups,
@@ -88,9 +88,9 @@ const updateUser = async (req, res) => {
       isAdmin,
       visits,
     } = req.body;
-
+    debugger
     const updateData = {
-      _id,
+      _id: userId,
       name,
       phone,
       groups,
@@ -103,15 +103,18 @@ const updateUser = async (req, res) => {
     };
 
     // Валидация данных
+    debugger
     const validatedData = validateData(schemas.updateSchema, updateData);
-
+    debugger
     // Хэширование пароля, если он валиден
     if (password && typeof password === "string" && password.length > 6) {
+      debugger
       updateData.password = await bcrypt.hash(password, 10);
     } else {
+      debugger
       throw new Error("Invalid password");
     }
-
+debugger
     // Поиск и обновление пользователя
     const updatedUser = await User.findByIdAndUpdate(userId, validatedData, {
       new: true,
@@ -119,10 +122,11 @@ const updateUser = async (req, res) => {
 
     // Проверка, если пользователь не найден
     if (!updatedUser) {
+      debugger
       res.status(404).json({ message: "User not found" });
       return;
     }
-
+    debugger
     // Успешный ответ
     res.status(200).json({
       _id: updatedUser._id,
@@ -139,11 +143,15 @@ const updateUser = async (req, res) => {
       updatedAt: updatedUser.updatedAt,
     });
   } catch (error) {
+    debugger
     if (error.message.startsWith("Validation error")) {
+      debugger
       res.status(400).json({ message: error.message });
     } else if (error.message === "Invalid password") {
+      debugger
       res.status(400).json({ message: error.message });
     } else {
+      debugger
       console.error("Error during user update:", error);
       res
         .status(500)
@@ -311,7 +319,8 @@ const addUser = async (req, res) => {
     const newUser = await User.create(validatedData);
 
     // Успешный ответ
-    res.status(200).json({
+    res.status(201).json({
+      _id: newUser._id,
       discount: newUser.discount,
       isAdmin: newUser.isAdmin,
       visits: newUser.visits,

@@ -10,8 +10,8 @@ jest.mock("../../../models/eventModel", () => {
   const saveMock = jest.fn(); // Мок метода save
 
   const validateMock = jest.fn().mockImplementation((data) => {
-    if (!data._id) {
-      return { error: { details: [{ message: '"_id" is required' }] } }; // Создаем ошибку
+    if (!data.date) {
+      return { error: { details: [{ message: '"date" is required' }] } }; // Создаем ошибку
     }
     return { value: data }; // Возвращаем данные, если все нормально
   });
@@ -54,9 +54,9 @@ describe("createEvent Controller", () => {
 
     // Дополнительно: Проверяем вызов validate
     const mockData = {
-      _id: "111",
+   //   _id: "111",
       date: "2023-12-01",
-      group: "1",
+      groupId: "1",
       participants: [],
     };
     schemas.eventSchemaJoi.validate(mockData);
@@ -74,8 +74,8 @@ describe("createEvent Controller", () => {
       };
     });
     validateData.mockImplementationOnce(() => ({
-      _id: "111",
-      group: "1",
+     // _id: "111",
+     groupId: "1",
       groupTitle: "groupTitle1",
       isCancelled: false,
       date: new Date().toISOString(),
@@ -84,8 +84,8 @@ describe("createEvent Controller", () => {
 
     const req = httpMocks.createRequest({
       body: {
-        _id: "111",
-        group: "1",
+      //  _id: "111",
+      groupId: "1",
         groupTitle: "groupTitle1",
         isCancelled: false,
         date: new Date().toISOString(),
@@ -114,8 +114,8 @@ describe("createEvent Controller", () => {
 
     const req = httpMocks.createRequest({
       body: {
-        _id: "111",
-        group: "1",
+       // _id: "111",
+       groupId: "1",
         isCancelled: false,
         date: "неверный_формат_даты", // Неверный формат
         participants: [],
@@ -137,16 +137,16 @@ describe("createEvent Controller", () => {
 
   it("должен успешно создать событие и вернуть статус 201", async () => {
     const mockEvent = {
-      _id: "1111",
-      group: "1",
+   //   _id: "1111",
+   groupId: "1",
       groupTitle: "groupTitle1",
       isCancelled: false,
       date: "2023-01-02",
       participants: [],
     };
     validateData.mockImplementationOnce(() => ({
-      _id: "1111",
-      group: "1",
+     // _id: "1111",
+     groupId: "1",
       groupTitle: "groupTitle1",
       isCancelled: false,
       date: "2023-01-02",
@@ -154,7 +154,7 @@ describe("createEvent Controller", () => {
     }));
     // Настраиваем save для возврата mockEvent
     const { saveMock } = require("../../../models/eventModel").__mocks__;
-    saveMock.mockResolvedValueOnce(mockEvent);
+    saveMock.mockResolvedValueOnce({...mockEvent, _id:'1111'});
 
     const req = httpMocks.createRequest({
       body: mockEvent,
@@ -170,7 +170,7 @@ describe("createEvent Controller", () => {
 
     // Проверяем, что возвращены правильные данные
     const responseData = JSON.parse(res._getData());
-    expect(responseData).toEqual(mockEvent);
+    expect(responseData).toEqual({...mockEvent, _id:'1111'});
 
     // Проверяем, что save был вызван
     expect(saveMock).toHaveBeenCalledTimes(1);
@@ -186,8 +186,8 @@ describe("createEvent Controller", () => {
 
     const req = httpMocks.createRequest({
       body: {
-        _id: "1111",
-        group: "1",
+       // _id: "1111",
+       groupId: "1",
         groupTitle: "groupTitle1",
         isCancelled: false,
         date: "2023-01-02",
@@ -196,8 +196,8 @@ describe("createEvent Controller", () => {
     });
     const res = httpMocks.createResponse();
     validateData.mockImplementationOnce(() => ({
-      _id: "1111",
-      group: "1",
+    //  _id: "1111",
+    groupId: "1",
       groupTitle: "groupTitle1",
       isCancelled: false,
       date: "2023-01-02",
@@ -214,8 +214,8 @@ describe("createEvent Controller", () => {
   it("должен вернуть 400, если date имеет неверный формат", async () => {
     const req = httpMocks.createRequest({
       body: {
-        _id: "111",
-        group: "1",
+       // _id: "111",
+       groupId: "1",
         isCancelled: false,
         date: "неверный_формат_даты", // Неверный формат
         participants: [],

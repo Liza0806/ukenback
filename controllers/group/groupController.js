@@ -24,17 +24,22 @@ const getAllGroups = async (req, res) => {
 
 /// Получить 1 по ид
 const getGroupById = async (req, res) => {
+  debugger
   const { id } = req.params; // Получаем ID из параметров запроса
+  debugger
   //console.log(id, 'id in getGroupById')
   try {
+    debugger
     const group = await Group.findById({ _id: id }); // Найти группу по ID
-
+debugger
     if (!group) {
+      debugger
       return res.status(404).json({ message: "Group not found" });
     }
 
     res.json(group);
   } catch (error) {
+    debugger
     return res
       .status(500)
       .json({ message: `Error getting group: ${error.message}` });
@@ -77,7 +82,8 @@ const addGroup = async (req, res) => {
       participants,
     });
 debugger
-    const currentDate = new Date();
+   console.log(group, 'group in 80 group ctrl')
+const currentDate = new Date();
     const endOfMonth = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth() + 1,
@@ -140,6 +146,7 @@ const updateGroup = async (req, res) => {
     }
 
     // Возвращаем обновленные данные группы
+    console.log(updatedGroup, 'updatedGroup')
     res.status(200).json({ updatedGroup, _id: id });
   } catch (err) {
     // Логируем и возвращаем ошибку

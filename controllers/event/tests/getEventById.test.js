@@ -25,7 +25,7 @@ describe("getEventById Controller", () => {
     Event.findById.mockRejectedValueOnce(new Error("Database error"));
 
     const req = httpMocks.createRequest({
-      params: { eventId: "1" },
+      params: { eventId: "6739f7af2c2fffed37b1edb5_20241202" },
     });
     const res = httpMocks.createResponse();
     // Вызываем контроллер
@@ -54,7 +54,7 @@ describe("getEventById Controller", () => {
     await Event.findById.mockResolvedValueOnce(mockEvent); // Мок успешного ответа
 
     const req = httpMocks.createRequest({
-      params: { eventId: "1" },
+      params: { eventId: "6739f7af2c2fffed37b1edb5_20241202" },
     });
     const res = httpMocks.createResponse();
 
@@ -65,7 +65,7 @@ describe("getEventById Controller", () => {
   });
   it("должен вернуть событие при успешном выполнении запроса", async () => {
     const event = {
-      _id: "1",
+      _id: "6739f7af2c2fffed37b1edb5_20241202",
       groupTitle: "groupTitle 1",
       groupId: "1",
       isCancelled: false,
@@ -75,7 +75,7 @@ describe("getEventById Controller", () => {
     await Event.findById.mockResolvedValueOnce(event);
 
     const req = httpMocks.createRequest({
-      params: { eventId: "1" },
+      params: { eventId: "6739f7af2c2fffed37b1edb5_20241202" },
     });
     const res = httpMocks.createResponse();
 
@@ -89,7 +89,7 @@ describe("getEventById Controller", () => {
 
   it("должен вернуть пустой массив, если события нет", async () => {
     const req = httpMocks.createRequest({
-      params: { eventId: "1" },
+      params: { eventId: "6739f7af2c2fffed37b1edb5_20241202" },
     });
     const res = httpMocks.createResponse();
 

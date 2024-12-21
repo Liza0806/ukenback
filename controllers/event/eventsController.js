@@ -16,15 +16,19 @@ const getAllEvents = async (req, res) => {
 // получить по ид
 const getEventById = async (req, res) => {
   const { eventId } = req.params;
-
+  debugger
   try {
+    debugger
     const event = await Event.findById(eventId);
 
     if (!event) {
+      debugger
       return res.status(404).json({ message: "Event not found" });
     }
+    debugger
     return res.json(event);
   } catch (error) {
+    debugger
     return res
       .status(500)
       .json({ message: `Error getting event: ${error.message}` });
@@ -74,7 +78,7 @@ const getEventsByGroup = async (req, res) => {
     return res.status(400).json({ message: "GroupId is required." });
   }
   try {
-    const events = await Event.find({ group: groupId });
+    const events = await Event.find({ groupId: groupId });
 
     if (events.length === 0) {
       return res
@@ -92,13 +96,15 @@ const getEventsByGroup = async (req, res) => {
 
 // создать
 const createEvent = async (req, res) => {
-  const { _id, date, group, isCancelled, groupTitle, participants } = req.body;
-  const event = { _id, date, group, groupTitle, isCancelled, participants };
-
-  if (!_id || !date || !group || isCancelled === undefined || !participants) {
+  debugger
+  const { date, groupId, isCancelled, groupTitle, participants } = req.body;
+  const event = { date, groupId, groupTitle, isCancelled, participants };
+  debugger
+  if (!date || !groupId || isCancelled === undefined || !participants) {
+    debugger
     return res.status(400).json({
       message:
-        "Bad Request: Missing required fields (_id, date, group, isCancelled, participants)",
+        "Bad Request: Missing required fields (date, group, isCancelled, participants)",
     });
   }
 
@@ -106,25 +112,27 @@ const createEvent = async (req, res) => {
     // Выполняем валидацию
     const validatedData = validateData(schemas.eventSchemaJoi, event);
     // console.log(validatedData, 'validatedData'); // Логируем результат валидации
-
+    debugger
     const newEvent = new Event({
-      _id: validatedData._id,
       date: validatedData.date,
-      group: validatedData.group,
+      groupId: validatedData.groupId,
       groupTitle: validatedData.groupTitle,
       isCancelled: validatedData.isCancelled,
       participants: validatedData.participants,
     });
-
-    await newEvent.save();
-
-    return res.status(201).json(newEvent);
+    debugger
+    const savedEvent = await newEvent.save(); // Save the event to the database
+console.log(savedEvent, 'savedEvent')
+    debugger
+    // Return the event with its ID
+    return res.status(201).json(savedEvent);
   } catch (error) {
     if (error.message.startsWith("Validation error")) {
+      debugger
       return res.status(400).json({ message: error.message });
     }
 
-    // Логирование ошибки
+    // Log the error
     console.error("Error during event creation:", error);
     return res
       .status(500)
@@ -132,21 +140,30 @@ const createEvent = async (req, res) => {
   }
 };
 
+
 // обновить
 const updateEvent = async (req, res) => {
+  debugger
   const { eventId } = req.params;
-  const newEvent = req.body;
+  const { date, groupId, groupTitle, isCancelled, participants } = req.body;
 
+  debugger
+  const newEvent = { _id: eventId, date, groupId, groupTitle, isCancelled, participants };
+  debugger
   try {
     // Найти существующее событие
+    debugger
     const event = await Event.findById(eventId);
-
+    debugger
     if (!event) {
+      debugger
       return res.status(404).json({ message: "Event not found" });
     }
     // Выполняем валидацию
-    const validatedData = validateData(schemas.eventSchemaJoi, newEvent);
+    debugger
+    const validatedData = validateData(schemas.updateEventSchemaJoi, newEvent);
     // Обновляем событие валидированными данными
+    debugger
     Object.assign(event, validatedData);
 
     // Сохраняем обновленное событие

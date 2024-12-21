@@ -5,9 +5,9 @@ const { schemas } = require("../models/userModel");
 const controllers = require("../controllers/user/userController");
 
 router.get("/", controllers.getAllUsers);
-router.get("/:id", controllers.getUserByUserId);
+router.get("/:userId", controllers.getUserByUserId);
 router.post('/', validateBody(schemas.registerSchema), controllers.addUser);
-router.patch("/:userId",validateBody(schemas.updateSchema), controllers.updateUser); /// напиши валидацию
+router.put("/:userId",validateBody(schemas.updateSchema), controllers.updateUser); /// напиши валидацию
 router.delete("/:userId", controllers.deleteUser);
 router.post("/:userId/visits", controllers.addVisit);
 router.patch("/:userId/balance", controllers.updateUserBalance); /// напиши валидацию
