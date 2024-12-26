@@ -39,7 +39,7 @@ const swaggerSpec = swaggerJsdoc(options);
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "script-src 'self' 'unsafe-inline' https://vercel.live"
+    "script-src 'self' 'unsafe-inline' https://ukenback-git-main-lizas-projects-a08fc60d.vercel.app/swagger-ui-theme/theme-material.css"
   );
   next();
 });
