@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const swaggerUiDist = require('swagger-ui-dist');
 
 const userRouter = require("./routes/user");
 const groupRouter = require("./routes/group");
@@ -34,10 +35,9 @@ const options = {
 
 const swaggerSpec = swaggerJsdoc(options);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.47.0/swagger-ui.css', // Укажите правильный CSS через CDN
-  customJsUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.47.0/swagger-ui-bundle.js', // Укажите правильный JS через CDN
-}));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use('/swagger-ui', express.static(swaggerUiDist.absolutePath()));
 
 app.use(cors(corsOptions));
 
