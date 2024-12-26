@@ -35,10 +35,10 @@ const options = {
 
 const swaggerSpec = swaggerJsdoc(options);
 
+// Подключение темы через CDN
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCssUrl: '/swagger-ui-theme/theme-material.css',
+  customCssUrl: 'https://raw.githubusercontent.com/ostranme/swagger-ui-themes/refs/heads/develop/themes/3.x/theme-material.css'  // Пример с CDN
 }));
-app.use('/swagger-ui-theme', express.static(path.join(__dirname, 'public', 'css')));
 
 app.use(cors(corsOptions));
 app.use(logger(formatsLogger));
