@@ -37,7 +37,10 @@ const swaggerSpec = swaggerJsdoc(options);
 
 // Добавление CSP заголовка для разрешения inline-скриптов
 app.use((req, res, next) => {
-  res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline'");
+  res.setHeader(
+    "Content-Security-Policy",
+    "script-src 'self' 'unsafe-inline' https://vercel.live"
+  );
   next();
 });
 
