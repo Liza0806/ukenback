@@ -31,7 +31,7 @@ const options = {
     },
   },
   apis: ['./routes/*.js'], 
-   customCssUrl: '/swagger-ui-theme/theme-material.css',
+   customCssUrl: './public/swagger-ui-theme/theme-material.css',
 };
 
 const swaggerSpec = swaggerJsdoc(options);
