@@ -35,38 +35,39 @@ const options = {
 
 const swaggerSpec = swaggerJsdoc(options);
 
-//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCssUrl: '/swagger-ui-theme/theme-material.css',  
-}));
-// app.use('/swagger-ui', express.static(swaggerUiDist.absolutePath()));
-//app.use('/static/swagger-ui', express.static(swaggerUiDist.absolutePath()));
-
-app.use(cors(corsOptions));
-
-app.use(logger(formatsLogger));
-
-app.use(express.json());
-
-dotenv.config();
+// Добавление CSP заголовка для разрешения inline-скриптов
 app.use((req, res, next) => {
   res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline'");
   next();
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCssUrl: '/swagger-ui-theme/theme-material.css',
+}));
+
+app.use(cors(corsOptions));
+app.use(logger(formatsLogger));
+app.use(express.json());
+
+dotenv.config();
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/favicon.ico", (req, res) =>
   res.sendFile(path.join(__dirname, "public", "favicon.ico"))
 );
+
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Ukenback API" });
 });
+
 app.use("/users/", userRouter);
 app.use("/groups/", groupRouter);
 app.use("/events/", eventsRouter);
 app.use("/api/payment/", paymentRoutes);
+
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
 });
+
 app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message });
 });
