@@ -25,8 +25,11 @@ const corsOptions = {
 const options = {
    customCssUrl: './theme-material.css',
 };
-
-const swaggerSpec = swaggerJsdoc(options);
+const options2 = {
+  definition: swaggerDocument,
+  apis: ["./routes/*.js"], 
+};
+const swaggerSpec = swaggerJsdoc(options2);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 app.use(cors(corsOptions));
