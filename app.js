@@ -66,5 +66,8 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message });
 });
-
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline'");
+  next();
+});
 module.exports = app;
