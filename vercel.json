@@ -4,7 +4,16 @@
     "builds": [
       { "src": "server.js", "use": "@vercel/node" }
     ],
-    "routes": [
-      { "src": "/(.*)", "dest": "server.js" }
-    ]
+   "routes": [
+    {
+      "src": "/api-docs/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+        }
+      ]
+    },
+    { "src": "/(.*)", "dest": "server.js" }
+  ]
   }
