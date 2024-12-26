@@ -2,6 +2,10 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv");
+
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
 const userRouter = require("./routes/user");
 const groupRouter = require("./routes/group");
 const eventsRouter = require("./routes/events");
@@ -15,6 +19,22 @@ const corsOptions = {
   origin: ["https://uken.netlify.app", "http://localhost:3000"], // разрешённые домены
   optionsSuccessStatus: 200,
 };
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API документация',
+      version: '1.0.0',
+      description: 'Описание API',
+    },
+  },
+  apis: ['./routes/*.js'], 
+};
+
+const swaggerSpec = swaggerJsdoc(options);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(cors(corsOptions));
 
