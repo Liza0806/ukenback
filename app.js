@@ -37,10 +37,6 @@ const swaggerSpec = swaggerJsdoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   customCssUrl: '/swagger-ui-theme/theme-material.css',
 }));
-// Подключение темы через CDN
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCssUrl: 'https://raw.githubusercontent.com/ostranme/swagger-ui-themes/refs/heads/develop/themes/3.x/theme-material.css'  // Пример с CDN
-}));
 
 app.use(cors(corsOptions));
 app.use(logger(formatsLogger));
