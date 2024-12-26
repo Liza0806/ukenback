@@ -35,18 +35,10 @@ const options = {
 
 const swaggerSpec = swaggerJsdoc(options);
 
-// Добавление CSP заголовка для разрешения inline-скриптов
-app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "script-src 'self' 'unsafe-inline' https://ukenback-git-main-lizas-projects-a08fc60d.vercel.app/swagger-ui-theme/theme-material.css"
-  );
-  next();
-});
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   customCssUrl: '/swagger-ui-theme/theme-material.css',
 }));
+app.use('/swagger-ui-theme', express.static(path.join(__dirname, 'public', 'css')));
 
 app.use(cors(corsOptions));
 app.use(logger(formatsLogger));

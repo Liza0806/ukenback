@@ -6,26 +6,5 @@
     ],
     "routes": [
       { "src": "/(.*)", "dest": "server.js" }
-    ],
-    "headers": [
-      {
-        "source": "/swagger-ui/(.*)",
-        "headers": [
-          {
-            "key": "Content-Security-Policy",
-            "value": "script-src 'self' 'unsafe-inline' https://vercel.live https://cdn.jsdelivr.net"
-          }
-        ]
-      },
-      {
-        "source": "/(.*)",
-        "headers": [
-          {
-            "key": "Content-Security-Policy",
-            "value": "script-src 'self' 'unsafe-inline' https://vercel.live"
-          }
-        ]
-      }
     ]
   }
-  
