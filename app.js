@@ -31,12 +31,11 @@ const options = {
     },
   },
   apis: ['./routes/*.js'], 
+   customCssUrl: '/swagger-ui-theme/theme-material.css',
 };
 
 const swaggerSpec = swaggerJsdoc(options);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCssUrl: '/swagger-ui-theme/theme-material.css',
-}));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(options));
 
 app.use(cors(corsOptions));
 app.use(logger(formatsLogger));
