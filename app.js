@@ -23,7 +23,7 @@ const corsOptions = {
 };
 
 const options = {
-   customCssUrl: './public/swagger-ui-theme/theme-material.css',
+   customCssUrl: './theme-material.css',
 };
 
 const swaggerSpec = swaggerJsdoc(options);
