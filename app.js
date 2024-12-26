@@ -37,10 +37,11 @@ const swaggerSpec = swaggerJsdoc(options);
 app.use("/api-docs", (req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+    "script-src 'self' 'unsafe-inline' https://vercel.live; style-src 'self' 'unsafe-inline' https://raw.githubusercontent.com;"
   );
   next();
 });
+
 // Подключение темы через CDN
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   customCssUrl: 'https://raw.githubusercontent.com/ostranme/swagger-ui-themes/refs/heads/develop/themes/3.x/theme-material.css'  // Пример с CDN
