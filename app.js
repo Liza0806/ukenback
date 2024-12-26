@@ -35,10 +35,12 @@ const options = {
 
 const swaggerSpec = swaggerJsdoc(options);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCssUrl: '/swagger-ui-theme/theme-material.css',  
+}));
 // app.use('/swagger-ui', express.static(swaggerUiDist.absolutePath()));
-app.use('/static/swagger-ui', express.static(swaggerUiDist.absolutePath()));
+//app.use('/static/swagger-ui', express.static(swaggerUiDist.absolutePath()));
 
 app.use(cors(corsOptions));
 
