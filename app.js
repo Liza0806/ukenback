@@ -49,6 +49,10 @@ app.use(logger(formatsLogger));
 app.use(express.json());
 
 dotenv.config();
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline'");
+  next();
+});
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/favicon.ico", (req, res) =>
   res.sendFile(path.join(__dirname, "public", "favicon.ico"))
@@ -66,8 +70,5 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message });
 });
-app.use((req, res, next) => {
-  res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline'");
-  next();
-});
+
 module.exports = app;
