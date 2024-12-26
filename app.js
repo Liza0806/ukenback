@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerUiDist = require('swagger-ui-dist');
+const swaggerDocument = require('./swaggerConfig.json');
 
 const userRouter = require("./routes/user");
 const groupRouter = require("./routes/group");
@@ -22,20 +23,11 @@ const corsOptions = {
 };
 
 const options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'API документация',
-      version: '1.0.0',
-      description: 'Описание API',
-    },
-  },
-  apis: ['./routes/*.js'], 
    customCssUrl: './public/swagger-ui-theme/theme-material.css',
 };
 
 const swaggerSpec = swaggerJsdoc(options);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(options));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 app.use(cors(corsOptions));
 app.use(logger(formatsLogger));
