@@ -3,17 +3,14 @@ const logger = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
-const swaggerJSDoc = require('swagger-jsdoc');// для исп-я комментариев для сваггера
+const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-//const swaggerUiDist = require('swagger-ui-dist');
-//const pathToSwaggerUi = require('swagger-ui-dist').absolutePath()
+const swaggerUiDist = require('swagger-ui-dist');
 
 const userRouter = require("./routes/user");
 const groupRouter = require("./routes/group");
 const eventsRouter = require("./routes/events");
 const paymentRoutes = require("./routes/payments");
-const swaggerUiDist = require('swagger-ui-dist');
-const pathToSwaggerUi = swaggerUiDist.absolutePath();
 
 const app = express();
 const path = require("path");
@@ -22,7 +19,7 @@ const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 const corsOptions = {
   origin: ["https://uken.netlify.app", "http://localhost:3000"], // разрешённые домены
   optionsSuccessStatus: 200,
-}; 
+};
 
 const options = {
   definition: {
@@ -32,30 +29,14 @@ const options = {
       version: '1.0.0',
       description: 'Описание API',
     },
-  },   // описание в сваггер
+  },
   apis: ['./routes/*.js'], 
 };
-const swaggerSpec = swaggerJSDoc(options);  // для текста в сваггере
 
-// Подключаем Swagger UI
-app.use('/swagger-ui', express.static(pathToSwaggerUi));
-
-// Раздаём документацию API
+const swaggerSpec = swaggerJsdoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  swaggerOptions: {
-    url: '/swagger.json', // Путь к спецификации API
-  },
+  customCssUrl: '/swagger-ui-theme/theme-material.css',
 }));
-
-// Раздача swagger.json
-app.get('/swagger.json', (req, res) => {
-  res.sendFile(path.join(__dirname, 'swagger.json'));
-});
-
-
-//app.use(express.static(pathToSwaggerUi))
-
-//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(cors(corsOptions));
 app.use(logger(formatsLogger));
