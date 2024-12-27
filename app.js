@@ -12,6 +12,23 @@ const userRouter = require("./routes/user");
 const groupRouter = require("./routes/group");
 const eventsRouter = require("./routes/events");
 const paymentRoutes = require("./routes/payments");
+const swaggerUiDist = require('swagger-ui-dist');
+const pathToSwaggerUi = swaggerUiDist.absolutePath();
+
+// Подключаем Swagger UI
+app.use('/swagger-ui', express.static(pathToSwaggerUi));
+
+// Раздаём документацию API
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  swaggerOptions: {
+    url: '/swagger.json', // Путь к спецификации API
+  },
+}));
+
+// Раздача swagger.json
+app.get('/swagger.json', (req, res) => {
+  res.sendFile(path.join(__dirname, 'swagger.json'));
+});
 
 const app = express();
 const path = require("path");
@@ -36,7 +53,7 @@ const options = {
 //app.use(express.static(pathToSwaggerUi))
 const swaggerSpec = swaggerJSDoc(options);  // для текста в сваггере
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(cors(corsOptions));
 app.use(logger(formatsLogger));
