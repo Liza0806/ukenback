@@ -107,7 +107,10 @@
 .swagger-ui .opblock .opblock-section-header {
   padding: 8px 20px;
   background: hsla(0, 0%, 100%, .8);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .1)
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .swagger-ui .opblock .opblock-section-header, .swagger-ui .opblock .opblock-section-header label {
@@ -377,8 +380,13 @@
 }
 
 .swagger-ui .execute-wrapper {
-  padding: 20px;
   text-align: right
+}
+
+.opblock-description-wrapper ul{
+  display: flex;
+  justify-content: space-between;
+  align-items: center
 }
 
 .swagger-ui .execute-wrapper .btn {
@@ -1753,3 +1761,9 @@ justify-content:space-between;
 .svg-assets {
   display: none
 }
+
+.response-col_description p {
+  margin: 0;
+  padding: 0;
+}
+
