@@ -1749,3 +1749,7 @@ display: flex;
 align-items:center;
 justify-content:space-between;
 }
+
+.svg-assets {
+  display: none
+}
