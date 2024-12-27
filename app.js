@@ -3,10 +3,10 @@ const logger = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
-const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerJSDoc = require('swagger-jsdoc');// для исп-я комментариев для сваггера
 const swaggerUi = require('swagger-ui-express');
-const swaggerUiDist = require('swagger-ui-dist');
-const pathToSwaggerUi = require('swagger-ui-dist').absolutePath()
+//const swaggerUiDist = require('swagger-ui-dist');
+//const pathToSwaggerUi = require('swagger-ui-dist').absolutePath()
 
 const userRouter = require("./routes/user");
 const groupRouter = require("./routes/group");
@@ -30,15 +30,13 @@ const options = {
       version: '1.0.0',
       description: 'Описание API',
     },
-  },
+  },   // описание в сваггер
   apis: ['./routes/*.js'], 
 };
-app.use(express.static(pathToSwaggerUi))
-const swaggerSpec = swaggerJsdoc(options);
+//app.use(express.static(pathToSwaggerUi))
+const swaggerSpec = swaggerJSDoc(options);  // для текста в сваггере
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCssUrl: './theme-material.css',
-}));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(cors(corsOptions));
 app.use(logger(formatsLogger));
