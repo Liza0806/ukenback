@@ -33,7 +33,7 @@
     "nodemailer": "^6.9.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-dist": "^5.18.2",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
   },
   "devDependencies": {
     "eslint": "7.19.0",

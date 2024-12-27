@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerUiDist = require('swagger-ui-dist');
+const pathToSwaggerUi = require('swagger-ui-dist').absolutePath()
 
 const userRouter = require("./routes/user");
 const groupRouter = require("./routes/group");
@@ -33,10 +34,11 @@ const options = {
   apis: ['./routes/*.js'], 
 };
 
-const swaggerSpec = swaggerJsdoc(options);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCssUrl: './public/swagger-ui-theme/theme-material.css',
-}));
+//const swaggerSpec = swaggerJsdoc(options);
+app.use(express.static(pathToSwaggerUi))
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+//   customCssUrl: './public/swagger-ui-theme/theme-material.css',
+// }));
 
 app.use(cors(corsOptions));
 app.use(logger(formatsLogger));
