@@ -23,6 +23,18 @@ const corsOptions = {
   origin: ["https://uken.netlify.app", "http://localhost:3000"], // разрешённые домены
   optionsSuccessStatus: 200,
 }; 
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API документация',
+      version: '1.0.0',
+      description: 'Описание API',
+    },
+  },   // описание в сваггер
+  apis: ['./routes/*.js'], 
+};
 const swaggerSpec = swaggerJSDoc(options);  // для текста в сваггере
 
 // Подключаем Swagger UI
@@ -41,17 +53,6 @@ app.get('/swagger.json', (req, res) => {
 });
 
 
-const options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'API документация',
-      version: '1.0.0',
-      description: 'Описание API',
-    },
-  },   // описание в сваггер
-  apis: ['./routes/*.js'], 
-};
 //app.use(express.static(pathToSwaggerUi))
 
 //app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
