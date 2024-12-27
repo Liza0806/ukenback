@@ -33,12 +33,12 @@ const options = {
   },
   apis: ['./routes/*.js'], 
 };
-
-//const swaggerSpec = swaggerJsdoc(options);
 app.use(express.static(pathToSwaggerUi))
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-//   customCssUrl: './public/swagger-ui-theme/theme-material.css',
-// }));
+//const swaggerSpec = swaggerJsdoc(options);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCssUrl: './public/swagger-ui-theme/theme-material.css',
+}));
 
 app.use(cors(corsOptions));
 app.use(logger(formatsLogger));
