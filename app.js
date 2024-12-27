@@ -15,6 +15,15 @@ const paymentRoutes = require("./routes/payments");
 const swaggerUiDist = require('swagger-ui-dist');
 const pathToSwaggerUi = swaggerUiDist.absolutePath();
 
+const app = express();
+const path = require("path");
+const formatsLogger = app.get("env") === "development" ? "dev" : "short";
+
+const corsOptions = {
+  origin: ["https://uken.netlify.app", "http://localhost:3000"], // разрешённые домены
+  optionsSuccessStatus: 200,
+}; 
+
 // Подключаем Swagger UI
 app.use('/swagger-ui', express.static(pathToSwaggerUi));
 
@@ -30,14 +39,6 @@ app.get('/swagger.json', (req, res) => {
   res.sendFile(path.join(__dirname, 'swagger.json'));
 });
 
-const app = express();
-const path = require("path");
-const formatsLogger = app.get("env") === "development" ? "dev" : "short";
-
-const corsOptions = {
-  origin: ["https://uken.netlify.app", "http://localhost:3000"], // разрешённые домены
-  optionsSuccessStatus: 200,
-};
 
 const options = {
   definition: {
