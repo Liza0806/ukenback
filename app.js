@@ -35,7 +35,7 @@ const options = {
 
 const swaggerSpec = swaggerJsdoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCssUrl: '/swagger-ui-theme/theme-material.css',
+  customCssUrl: './swagger-ui-theme/theme-material.css',
 }));
 
 app.use(cors(corsOptions));
