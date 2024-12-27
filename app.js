@@ -37,7 +37,7 @@ app.use(express.static(pathToSwaggerUi))
 const swaggerSpec = swaggerJsdoc(options);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCssUrl: './public/swagger-ui-theme/theme-material.css',
+  customCssUrl: './theme-material.css',
 }));
 
 app.use(cors(corsOptions));
