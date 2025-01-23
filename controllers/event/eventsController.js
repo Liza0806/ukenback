@@ -1,6 +1,7 @@
 const { Event, schemas } = require("../../models/eventModel");
 const { validateData } = require("../../helpers/validators");
 const { HttpError } = require("../../helpers/HttpError");
+const { nanoid } = require("nanoid");
 
 // получить все тренировки из всех групп
 const getAllEvents = async (req, res) => {
@@ -111,9 +112,10 @@ const createEvent = async (req, res) => {
   try {
     // Выполняем валидацию
     const validatedData = validateData(schemas.eventSchemaJoi, event);
-    // console.log(validatedData, 'validatedData'); // Логируем результат валидации
+     console.log(validatedData, 'validatedData'); // Логируем результат валидации
     debugger
     const newEvent = new Event({
+      _id: nanoid(),
       date: validatedData.date,
       groupId: validatedData.groupId,
       groupTitle: validatedData.groupTitle,
@@ -121,6 +123,7 @@ const createEvent = async (req, res) => {
       participants: validatedData.participants,
     });
     debugger
+    
     const savedEvent = await newEvent.save(); // Save the event to the database
 console.log(savedEvent, 'savedEvent')
     debugger

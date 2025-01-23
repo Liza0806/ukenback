@@ -91,7 +91,7 @@ describe('Joi Validation for Event', () => {
 
   it('should set default values for missing optional fields', () => {
     const eventWithoutDefaults = {
-  //    _id: "2",
+     _id: "2",
       date: "2024-12-31T10:00:00.000Z",
       groupTitle: "Group B",
       groupId: "g2",

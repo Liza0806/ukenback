@@ -11,6 +11,7 @@ app.use("/events", router);
 
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
+const { nanoid } = require("nanoid");
 
 let mongoServer;
 

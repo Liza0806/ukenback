@@ -3,6 +3,7 @@ const { createEvent } = require("../eventsController");
 const { validateData } = require("../../../helpers/validators");
 const { Event } = require("../../../models/eventModel");
 const httpMocks = require("node-mocks-http");
+const { string } = require("joi");
 jest.mock("../../../helpers/validators", () => ({
   validateData: jest.fn(),
 }));
@@ -137,7 +138,7 @@ describe("createEvent Controller", () => {
 
   it("должен успешно создать событие и вернуть статус 201", async () => {
     const mockEvent = {
-   //   _id: "1111",
+      _id: 'string',//любая строка
    groupId: "1",
       groupTitle: "groupTitle1",
       isCancelled: false,
@@ -145,7 +146,7 @@ describe("createEvent Controller", () => {
       participants: [],
     };
     validateData.mockImplementationOnce(() => ({
-     // _id: "1111",
+     _id: 'string',//любая строка
      groupId: "1",
       groupTitle: "groupTitle1",
       isCancelled: false,
