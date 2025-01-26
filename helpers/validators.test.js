@@ -18,8 +18,9 @@ describe("validateData", () => {
   const schema = Joi.object({
     title: Joi.string().required(),
     coachId: Joi.string().required(),
-    payment: Joi.array().items(Joi.object()).required(),
-    schedule: Joi.array()
+    dailyPayment: Joi.number(),  
+    monthlyPayment:Joi.number(),
+    schedule: Joi.number()
       .items(
         Joi.object({
           day: Joi.string().required(),
@@ -34,7 +35,8 @@ describe("validateData", () => {
     const validData = {
       title: "Boxing Class",
       coachId: "603fbebe23e6d004b50a4887",
-      payment: [{ dailyPayment: 100, monthlyPayment: 300 }],
+      dailyPayment: 100, 
+      monthlyPayment: 300,
       schedule: [{ day: "Monday", time: "18:00" }],
       participants: [],
     };
@@ -48,7 +50,8 @@ describe("validateData", () => {
     const invalidData = {
       title: "",
       coachId: 123, // should be a string
-      payment: "invalid_payment_format", // should be an array
+      dailyPayment: "invalid_payment_format",  
+    monthlyPayment: "invalid_payment_format", // should be an array
       schedule: "invalid_schedule_format", // should be an array of objects
       participants: "invalid_participants_format", // should be an array
     };
@@ -66,7 +69,8 @@ describe("isValidGroupData", () => {
     const validData = {
       title: "Boxing Class",
       coachId: "603fbebe23e6d004b50a4887",
-      payment: [{ dailyPayment: 100, monthlyPayment: 300 }],
+       dailyPayment: 100, 
+       monthlyPayment: 300 ,
       schedule: [{ day: "Monday", time: "18:00" }],
       participants: [],
     };
@@ -80,7 +84,8 @@ describe("isValidGroupData", () => {
     const invalidData = {
       title: "",
       coachId: 123, // should be a string
-      payment: "invalid_payment_format", // should be an array
+      dailyPayment: "invalid_payment_format",
+monthlyPayment: "invalid_payment_format", // should be an array
       schedule: "invalid_schedule_format", // should be an array of objects
       participants: "invalid_participants_format", // should be an array
     };

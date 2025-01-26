@@ -31,21 +31,22 @@ describe("getGroupById Controller", () => {
 
     // Проверяем, что метод json был вызван с правильным сообщением
     const responseData = JSON.parse(res._getData());
- 
+
     expect(responseData).toEqual({
       message: "Error getting group: Database error",
     });
   });
 
   it("должен вернуть 200 и группу", async () => {
-    const mockGroup =  {
-        _id: "1",
-        title: "Group 1",
-        coachId: "coach1",
-        payment: [],
-        schedule: [],
-        participants: [],
-      };
+    const mockGroup = {
+      _id: "1",
+      title: "Group 1",
+      coachId: "coach1",
+      dailyPayment: 0,
+      monthlyPayment: 0,
+      schedule: [],
+      participants: [],
+    };
     await Group.findById.mockResolvedValueOnce(mockGroup); // Мок успешного ответа
 
     const req = httpMocks.createRequest({
@@ -59,14 +60,15 @@ describe("getGroupById Controller", () => {
     expect(res._getJSONData()).toEqual(mockGroup); // Проверяем, что вернулись данные
   });
   it("должен вернуть группу при успешном выполнении запроса", async () => {
-    const group =  {
-        _id: "1",
-        title: "Group 1",
-        coachId: "coach1",
-        payment: [],
-        schedule: [],
-        participants: [],
-      };
+    const group = {
+      _id: "1",
+      title: "Group 1",
+      coachId: "coach1",
+      dailyPayment: 0,
+      monthlyPayment: 0,
+      schedule: [],
+      participants: [],
+    };
     await Group.findById.mockResolvedValueOnce(group);
 
     const req = httpMocks.createRequest({
@@ -77,7 +79,7 @@ describe("getGroupById Controller", () => {
     await getGroupById(req, res);
 
     expect(res.statusCode).toBe(200); // Проверяем, что статус 200
-    expect(JSON.parse(res._getData())).toEqual(group) // Проверяем, что объект содержит нужное поле
+    expect(JSON.parse(res._getData())).toEqual(group); // Проверяем, что объект содержит нужное поле
   });
 
   it("должен вернуть пустой массив, если события нет", async () => {

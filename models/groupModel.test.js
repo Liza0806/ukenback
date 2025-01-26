@@ -147,7 +147,8 @@ describe("Joi Validation for Group", () => {
   it("should throw error if date is not in ISO format", () => {
     const invalidGroup = {
       ...validGroup,
-      payment: "12/31/2024", // Invalid payment format
+      dailyPayment: "12/31/2024",
+      monthlyPayment: "12/31/2024", // Invalid payment format
     };
 
     const { error } = schemas.addGroupSchema.validate(invalidGroup);

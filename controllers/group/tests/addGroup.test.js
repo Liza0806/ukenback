@@ -38,7 +38,8 @@ const mockData = {
   _id: "1",
   title: "Group 1",
   coachId: "coach1",
-  payment: [],
+  dailyPayment: 0,  
+  monthlyPayment:0,
   schedule: [
     { day: "Monday", time: "10:00" },
     { day: "Wednesday", time: "15:30" },
@@ -48,7 +49,8 @@ const mockData = {
 const mockDataPart = {
   title: "Group 1",
   coachId: "coach1",
-  payment: [],
+  dailyPayment: 0,  
+  monthlyPayment:0,
   schedule: [
     { day: "Monday", time: "10:00" },
     { day: "Wednesday", time: "15:30" },

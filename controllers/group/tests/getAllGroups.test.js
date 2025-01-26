@@ -38,22 +38,24 @@ describe("getAllGroups Controller", () => {
 
   it("должен вернуть 200 и массив групп", async () => {
     const mockGroups = [
-        {
-            _id: "1",
-            title: "Group 1",
-            coachId: "coach1",
-            payment: [],
-            schedule: [],
-            participants: [],
-          },
-          {
-            _id: "2",
-            title: "Group 2",
-            coachId: "coach2",
-            payment: [],
-            schedule: [],
-            participants: [],
-          },
+      {
+        _id: "1",
+        title: "Group 1",
+        coachId: "coach1",
+        dailyPayment: 0,
+        monthlyPayment: 0,
+        schedule: [],
+        participants: [],
+      },
+      {
+        _id: "2",
+        title: "Group 2",
+        coachId: "coach2",
+        dailyPayment: 0,
+        monthlyPayment: 0,
+        schedule: [],
+        participants: [],
+      },
     ];
     Group.find.mockResolvedValueOnce(mockGroups); // Мок успешного ответа
 
@@ -67,22 +69,24 @@ describe("getAllGroups Controller", () => {
   });
   it("должен вернуть все группы при успешном выполнении запроса", async () => {
     const groups = [
-        {
-            _id: "1",
-            title: "Group 1",
-            coachId: "coach1",
-            payment: [],
-            schedule: [],
-            participants: [],
-          },
-          {
-            _id: "2",
-            title: "Group 2",
-            coachId: "coach2",
-            payment: [],
-            schedule: [],
-            participants: [],
-          },
+      {
+        _id: "1",
+        title: "Group 1",
+        coachId: "coach1",
+        dailyPayment: 0,  
+        monthlyPayment:0,
+        schedule: [],
+        participants: [],
+      },
+      {
+        _id: "2",
+        title: "Group 2",
+        coachId: "coach2",
+        dailyPayment: 0,  
+        monthlyPayment:0,
+        schedule: [],
+        participants: [],
+      },
     ];
     await Group.find.mockResolvedValueOnce(groups);
 
