@@ -32,22 +32,22 @@ const participantsSchema = new Schema({
   },
 });
 
-const paymentSchema = new Schema ({
-  _id: {
-    type: String,
-    required: false
-  },
-  dailyPayment: {
-    type: Number,
-    required: false,
-    default: 0
-  },
-  monthlyPayment: {
-    type: Number,
-    required: false,
-    default: 0
-  },
-})
+// const paymentSchema = new Schema ({
+//   _id: {
+//     type: String,
+//     required: false
+//   },
+//   // dailyPayment: {
+//   //   type: Number,
+//   //   required: false,
+//   //   default: 0
+//   // },
+//   // monthlyPayment: {
+//   //   type: Number,
+//   //   required: false,
+//   //   default: 0
+//   // },
+// })
 
 const groupSchema = new Schema({
   // _id: {
@@ -63,7 +63,16 @@ const groupSchema = new Schema({
     type: String,
     default: "Kostya"
   },
-payment: [paymentSchema],
+  dailyPayment: {
+    type: Number,
+    required: false,
+    default: 0
+  },
+  monthlyPayment: {
+    type: Number,
+    required: false,
+    default: 0
+  },
 schedule: [scheduleSchema],
 participants: [participantsSchema],
 },{ timestamps: true });
@@ -73,12 +82,12 @@ const scheduleSchemaJoi = Joi.object({
   day: Joi.string().required(),
   time: Joi.string().required(),
 });
-const paymentSchemaJoi = Joi.object({
-  _id: Joi.string(),
-  dailyPayment: Joi.number().allow('').default('0'),
-  monthlyPayment: Joi.number().allow('').default('0'),
+// const paymentSchemaJoi = Joi.object({
+//   _id: Joi.string(),
+//   dailyPayment: Joi.number().allow('').default('0'),
+//   monthlyPayment: Joi.number().allow('').default('0'),
   
-});
+// });
 
 const participantsSchemaJoi = Joi.object({
   _id: Joi.string().required(),
@@ -89,13 +98,15 @@ const addGroupSchema = Joi.object({
   // _id: Joi.string(),
   title: Joi.string().default('newGroupTitle').required(),
   coachId: Joi.string().default('Kostya'),
-  payment: Joi.array().items(paymentSchemaJoi).default([]),
+  dailyPayment: Joi.number().allow('').default('0'),
+  monthlyPayment: Joi.number().allow('').default('0'),
   schedule: Joi.array().items(scheduleSchemaJoi).default([]),
   participants: Joi.array().items(participantsSchemaJoi).default([]),
 });
 
 const updateGroupPriceSchema = Joi.object({
-  payment: Joi.array().items(paymentSchemaJoi).default([]),
+  dailyPayment: Joi.number().allow('').default('0'),
+  monthlyPayment: Joi.number().allow('').default('0'),
 });
 
 const updateGroupparticipantsSchema = Joi.object({

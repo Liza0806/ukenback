@@ -1,3 +1,4 @@
+const { number } = require("joi");
 const { Group } = require("../models/groupModel");
 
 const validateData = (schema, data) => {
@@ -13,14 +14,13 @@ const validateData = (schema, data) => {
 
   ////////////// GROUP//////////////////
 
-  const isValidGroupData = ({ title, payment, coachId, schedule, participants }) => {
-    console.log("Validating data:", { title, payment, coachId, schedule, participants }); 
+  const isValidGroupData = ({ title, dailyPayment,  monthlyPayment, coachId, schedule, participants }) => {
+    console.log("Validating data:", { title, dailyPayment,  monthlyPayment, coachId, schedule, participants }); 
     debugger
     return (
       typeof title === "string" &&
       typeof coachId === "string" &&
-      Array.isArray(payment) &&
-      payment.every((p) => typeof p === "object" && p !== null) && // Пример проверки для payment
+     typeof dailyPayment === number || monthlyPayment === number,
       Array.isArray(schedule) &&
       schedule.every(
         (s) => typeof s.day === "string" && typeof s.time === "string"

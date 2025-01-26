@@ -46,12 +46,13 @@ debugger
   }
 };
 const addGroup = async (req, res) => {
-  const { title, coachId, payment, schedule, participants } = req.body;
+  const { title, coachId, dailyPayment,  monthlyPayment, schedule, participants } = req.body;
 
   try {
     const isValid = isValidGroupData({
       title,
-      payment,
+      dailyPayment,  
+      monthlyPayment,
       coachId,
       schedule,
       participants,
@@ -77,7 +78,8 @@ const addGroup = async (req, res) => {
     const group = await Group.create({
       title,
       coachId,
-      payment,
+      dailyPayment,  
+      monthlyPayment,
       schedule,
       participants,
     });
@@ -108,7 +110,8 @@ const currentDate = new Date();
         _id: group._id,
         coachId: group.coachId,
         participants: group.participants,
-        payment: group.payment,
+        dailyPayment: group.dailyPayment || 0,  
+        monthlyPayment:group.monthlyPayment || 0,
         schedule: group.schedule,
         title: group.title,
     });
@@ -128,7 +131,8 @@ const updateGroup = async (req, res) => {
     // Проверка валидности данных
     const isValid = isValidGroupData({
       title,
-      payment,
+      dailyPayment,  
+      monthlyPayment,
       coachId,
       schedule,
       participants,
