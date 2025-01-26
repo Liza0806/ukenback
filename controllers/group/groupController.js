@@ -127,7 +127,7 @@ const updateGroup = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
-    const { title, payment, coachId, schedule, participants } = req.body;
+    const { title,    dailyPayment, monthlyPayment, coachId, schedule, participants } = req.body;
     // Проверка валидности данных
     const isValid = isValidGroupData({
       title,
@@ -154,7 +154,7 @@ const updateGroup = async (req, res) => {
     res.status(200).json({ updatedGroup, _id: id });
   } catch (err) {
     // Логируем и возвращаем ошибку
-    return res.status(500).json({ message: `Internal Server Error:` });
+    return res.status(500).json({ message: `Internal Server Error: ${err}` });
   }
 };
 

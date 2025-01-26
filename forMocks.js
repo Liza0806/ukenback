@@ -3,7 +3,8 @@ const groups = [
     _id: "1",
     title: "Group 1",
     coachId: "coach1",
-    payment: [],
+    dailyPayment: 0,  
+    monthlyPayment:0,
     schedule: [],
     participants: [],
   },
@@ -11,7 +12,8 @@ const groups = [
     _id: "2",
     title: "Group 2",
     coachId: "coach2",
-    payment: [],
+    dailyPayment: 0,  
+    monthlyPayment:0,
     schedule: [],
     participants: [],
   },
@@ -39,11 +41,10 @@ const groups = [
     _id: "1",
     title: "Group 1",
     coachId: "coach1",
-    payment: [{
-        _id: "pay1",
+
         dailyPayment: 500,
-        monthlyPayment: 10000
-      }],
+        monthlyPayment: 10000,
+    
     schedule: [
         { day: "Monday", time: "10:00" },
         { day: "Wednesday", time: "15:30" },

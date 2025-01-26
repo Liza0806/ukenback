@@ -108,13 +108,10 @@ describe("POST /groups", () => {
       //_id: "1",
       title: "Group 1",
       coachId: "coach1",
-      payment: [
-        {
-          _id: "pay1",
-          dailyPayment: 500,
-          monthlyPayment: 10000,
-        },
-      ],
+
+      dailyPayment: 500,
+      monthlyPayment: 10000,
+
       schedule: [
         { day: "Monday", time: "10:00" },
         { day: "Wednesday", time: "15:30" },
@@ -149,13 +146,9 @@ describe("POST /groups", () => {
     const invalidGroup = {
       title: "Group 1",
       coachId: "coach1",
-      payment: [
-        {
-          _id: "pay1",
-          dailyPayment: 500,
-          monthlyPayment: 10000,
-        },
-      ],
+
+      dailyPayment: 500,
+      monthlyPayment: 10000,
     };
 
     const res = await request(app)
@@ -177,13 +170,10 @@ describe("PUT /groups/:id", () => {
       //_id: "1",
       title: "Group 1",
       coachId: "coach1",
-      payment: [
-        {
-          _id: "pay1",
-          dailyPayment: 500,
-          monthlyPayment: 10000,
-        },
-      ],
+
+      dailyPayment: 500,
+      monthlyPayment: 10000,
+
       schedule: [
         { day: "Monday", time: "10:00" },
         { day: "Wednesday", time: "15:30" },
@@ -221,13 +211,10 @@ describe("PUT /groups/:id", () => {
       //    _id: groupId,
       title: "New Title 1",
       coachId: "coach1",
-      payment: [
-        {
-          _id: "pay1",
-          dailyPayment: 500,
-          monthlyPayment: 10000,
-        },
-      ],
+
+      dailyPayment: 500,
+      monthlyPayment: 10000,
+
       schedule: [
         { day: "Monday", time: "10:00" },
         { day: "Wednesday", time: "15:30" },
@@ -267,13 +254,10 @@ describe("DELETE /groups/:id", () => {
       //    _id: groupId,
       title: "New Title 1",
       coachId: "coach1",
-      payment: [
-        {
-          _id: "pay1",
-          dailyPayment: 500,
-          monthlyPayment: 10000,
-        },
-      ],
+
+      dailyPayment: 500,
+      monthlyPayment: 10000,
+
       schedule: [
         { day: "Monday", time: "10:00" },
         { day: "Wednesday", time: "15:30" },
