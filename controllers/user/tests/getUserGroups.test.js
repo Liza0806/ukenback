@@ -58,7 +58,6 @@ describe("getUserByUserId Controller", () => {
         groups: ['Group1', 'Group2'],
         balance: 11,
         telegramId: 111,
-        discount: 11,
         visits: [
           {
             date: "2024-12-15",

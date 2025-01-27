@@ -47,7 +47,6 @@ describe("getUsersByName Controller", () => {
       groups: [],
       balance: 11,
       telegramId: 111,
-      discount: 11,
       visits: [],
     };
   
@@ -87,7 +86,6 @@ describe("getUsersByName Controller", () => {
         groups: [],
         balance: 11,
         telegramId: 111,
-        discount: 11,
         visits: [],
       };
     await User.find.mockResolvedValueOnce(user);

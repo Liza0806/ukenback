@@ -42,7 +42,6 @@ describe('User Model', () => {
    // expect(savedUser._id.equals("64dfc28c16f1e2d5c8e2b6a7")).toBe(true);
     expect(savedUser.name).toBe("userName 1"); 
     expect(savedUser.password).toBe("111");
-    expect(savedUser.discount).toBe(0);
     expect(savedUser.telegramId).toBe(111);
     expect(savedUser.visits).toEqual([]);
     expect(savedUser.createdAt).toBeDefined();
@@ -71,7 +70,6 @@ describe('Joi Validation for User', () => {
     name: "userName 1",
     password: "111222",
     phone: "+3801111111",
-    discount: 0,
     isAdmin: false,
     groups: [],
     balance: 11,
@@ -135,6 +133,6 @@ describe('Joi Validation for User', () => {
     expect(value.groups).toEqual([]);
     expect(value.visits).toEqual([]);
     expect(value.isAdmin).toEqual(false);
-    expect(value.discount).toEqual(0);
+
   });
 });

@@ -47,7 +47,6 @@ describe("getAllUsers Controller", () => {
             groups: [],
             balance: 11,
             telegramId: 111,
-            discount: 11,
             visits: [],
           },
           {
@@ -59,7 +58,6 @@ describe("getAllUsers Controller", () => {
             groups: [],
             balance: 22,
             telegramId: 222,
-            discount: 22,
             visits: [],
           },
     ];
@@ -84,7 +82,6 @@ describe("getAllUsers Controller", () => {
             groups: [],
             balance: 11,
             telegramId: 111,
-            discount: 11,
             visits: [],
           },
           {
@@ -96,7 +93,6 @@ describe("getAllUsers Controller", () => {
             groups: [],
             balance: 22,
             telegramId: 222,
-            discount: 22,
             visits: [],
           },
     ];

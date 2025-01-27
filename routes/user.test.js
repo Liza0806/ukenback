@@ -60,7 +60,6 @@ describe("GET /users/:userId", () => {
         groups: [],
         balance: 11,
         telegramId: 111,
-        discount: 11,
         visits: [],
       };
 
@@ -92,7 +91,7 @@ describe("POST /users", () => {
          groups: [],
          balance: 11,
          telegramId: 111,
-         discount: 11,
+
          visits: [],
        };
        const createdUser =  {
@@ -102,7 +101,7 @@ describe("POST /users", () => {
          groups: [],
          balance: 11,
          telegramId: 111,
-         discount: 11,
+
          visits: [],
        };
     const res = await request(app)
@@ -141,7 +140,7 @@ describe("PUT /users/:userId", () => {
        groups: [],
        balance: 11,
        telegramId: 111,
-       discount: 11,
+
        visits: [],
      };
   
@@ -164,7 +163,7 @@ describe("PUT /users/:userId", () => {
        groups: [],
        balance: 11,
        telegramId: 111,
-       discount: 11,
+
        visits: [],
      };
     debugger;
@@ -189,7 +188,7 @@ describe("DELETE /users/:userId", () => {
          groups: [],
          balance: 11,
          telegramId: 111,
-         discount: 11,
+
          visits: [],
        };
     debugger;

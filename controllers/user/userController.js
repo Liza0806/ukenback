@@ -84,7 +84,7 @@ const updateUser = async (req, res) => {
       balance,
       telegramId,
       password,
-      discount,
+       
       isAdmin,
       visits,
     } = req.body;
@@ -97,7 +97,7 @@ const updateUser = async (req, res) => {
       balance,
       telegramId,
       password,
-      discount,
+       
       isAdmin,
       visits,
     };
@@ -130,7 +130,6 @@ debugger
     // Успешный ответ
     res.status(200).json({
       _id: updatedUser._id,
-      discount: updatedUser.discount,
       isAdmin: updatedUser.isAdmin,
       visits: updatedUser.visits,
       name: updatedUser.name,
@@ -283,7 +282,7 @@ const addUser = async (req, res) => {
     balance,
     telegramId,
     password,
-    discount,
+     
     isAdmin,
     visits,
   } = req.body;
@@ -297,7 +296,7 @@ const addUser = async (req, res) => {
       balance,
       telegramId,
       password,
-      discount,
+       
       isAdmin,
       visits,
     };
@@ -321,7 +320,6 @@ const addUser = async (req, res) => {
     // Успешный ответ
     res.status(201).json({
       _id: newUser._id,
-      discount: newUser.discount,
       isAdmin: newUser.isAdmin,
       visits: newUser.visits,
       name: newUser.name,

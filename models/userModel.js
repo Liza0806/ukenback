@@ -26,10 +26,6 @@ const userSchema = new Schema(
       type: Number,
       default: 0,
     },
-    discount: {
-      type: Number,
-      default: 0,
-    },
     visits: [visitSchema],
     telegramId: {
       type: Number,
@@ -54,7 +50,6 @@ const registerSchema = Joi.object({
   balance: Joi.number().default(0),
   isAdmin: Joi.boolean().default(false),
   visits: Joi.array().default([]),
-  discount: Joi.number().default(0)
 });
 const updateSchema = Joi.object({
   _id: Joi.string(),
@@ -63,7 +58,6 @@ const updateSchema = Joi.object({
   groups: Joi.array(),
   telegramId: Joi.number(),
   isAdmin: Joi.boolean(),
-  discount: Joi.number(),
   balance: Joi.number(),
   visits: Joi.array(),
   password: Joi.string().min(6), 

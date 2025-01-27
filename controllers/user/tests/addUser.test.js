@@ -54,7 +54,6 @@ jest.mock("../../../helpers/validators", () => {
         groups: [],
         balance: 11,
         telegramId: 111,
-        discount: 11,
         visits: [],
       },
     })),
@@ -69,7 +68,6 @@ describe("addUser Controller", () => {
     groups: [],
     balance: 11,
     telegramId: 111,
-    discount: 11,
     visits: [],
   };
   it("должен корректно использовать схему валидации", async () => {
@@ -114,7 +112,6 @@ describe("addUser Controller", () => {
       _id: "1",
       name: "userName 1",
       phone: "11111",
-      discount: 11,
       password: "1111111",
       isAdmin: false,
       groups: [],
@@ -142,7 +139,6 @@ describe("addUser Controller", () => {
     expect(validateData).toHaveBeenCalledWith(schemas.registerSchema, {
       name: "userName 1",
       phone: "11111",
-      discount: 11,
       password: "1111111",
       isAdmin: false,
       groups: [],
@@ -165,7 +161,6 @@ describe("addUser Controller", () => {
       _id: '1',
       name: "userName 1",
       phone: "11111",
-      discount: 11,
       isAdmin: false,
       groups: [],
       balance: 11,
@@ -198,7 +193,6 @@ describe("addUser Controller", () => {
         groups: [],
         balance: 11,
         telegramId: 111,
-        discount: 11,
         visits: [],
       };
     const req = httpMocks.createRequest({

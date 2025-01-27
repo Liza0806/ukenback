@@ -59,7 +59,6 @@ describe("getUserByUserId Controller", () => {
         groups: [],
         balance: 11,
         telegramId: 111,
-        discount: 11,
         visits: [],
       };
     await User.findById.mockResolvedValueOnce(mockUser); // Мок успешного ответа
@@ -84,7 +83,6 @@ describe("getUserByUserId Controller", () => {
       groups: [],
       balance: 11,
       telegramId: 111,
-      discount: 11,
       visits: [],
     };
   
