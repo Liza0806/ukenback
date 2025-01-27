@@ -30,6 +30,7 @@ const participantsSchema = new Schema({
     type: Number,
     required: true,
   },
+discount: {type: Number, required: false} 
 });
 
 // const paymentSchema = new Schema ({
@@ -93,6 +94,7 @@ const participantsSchemaJoi = Joi.object({
   _id: Joi.string().required(),
   name: Joi.string().required(),
   telegramId: Joi.number().required(),
+discount: Joi.number()
 })
 const addGroupSchema = Joi.object({
   // _id: Joi.string(),

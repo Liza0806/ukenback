@@ -31,6 +31,10 @@ const userSchema = new Schema(
       type: Number,
       required: true,
     },
+    discount: {
+      type: Number,
+      required: false,
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -61,6 +65,7 @@ const updateSchema = Joi.object({
   balance: Joi.number(),
   visits: Joi.array(),
   password: Joi.string().min(6), 
+  discount: Joi.number(),
 });
 
 const loginSchema = Joi.object({
