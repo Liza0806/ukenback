@@ -127,7 +127,7 @@ const updateGroup = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
-    const { title,    dailyPayment, monthlyPayment, coachId, schedule, participants } = req.body;
+    const { title, dailyPayment, monthlyPayment, coachId, schedule, participants } = req.body;
     // Проверка валидности данных
     const isValid = isValidGroupData({
       title,
