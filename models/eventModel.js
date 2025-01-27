@@ -25,7 +25,7 @@ const eventSchema = new Schema({
         default: false
     },
     participants: {
-        type: [{ _id: String, name: String, telegramId: Number }],
+        type: [{ _id: String, name: String, telegramId: Number, discount: {type: Number, required: false} }],
         required: true
     }
 }, { timestamps: true }); // timestamps добавлены как опция схемы
@@ -35,7 +35,8 @@ const Event = model('event', eventSchema);
 const participantsSchemaJoi = Joi.object({
     name: Joi.string().required(),
     _id: Joi.string().required(),
-    telegramId: Joi.number()
+    telegramId: Joi.number(),
+    discount: Joi.number()
 });
 
 const eventSchemaJoi = Joi.object({
