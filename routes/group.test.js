@@ -63,8 +63,8 @@ describe("GET /groups/:id", () => {
         },
       ],
       schedule: [
-        { day: "Monday", time: "10:00" },
-        { day: "Wednesday", time: "15:30" },
+        { day: "  Понеділок", time: "10:00" },
+        { day: "Середа", time: "15:30" },
       ],
       participants: [
         {
@@ -113,8 +113,8 @@ describe("POST /groups", () => {
       monthlyPayment: 10000,
 
       schedule: [
-        { day: "Monday", time: "10:00" },
-        { day: "Wednesday", time: "15:30" },
+        { day: "  Понеділок", time: "10:00" },
+        { day: "Середа", time: "15:30" },
       ],
       participants: [
         {
@@ -175,8 +175,8 @@ describe("PUT /groups/:id", () => {
       monthlyPayment: 10000,
 
       schedule: [
-        { day: "Monday", time: "10:00" },
-        { day: "Wednesday", time: "15:30" },
+        { day: "  Понеділок", time: "10:00" },
+        { day: "Середа", time: "15:30" },
       ],
       participants: [
         {
@@ -216,8 +216,8 @@ describe("PUT /groups/:id", () => {
       monthlyPayment: 10000,
 
       schedule: [
-        { day: "Monday", time: "10:00" },
-        { day: "Wednesday", time: "15:30" },
+        { day: "  Понеділок", time: "10:00" },
+        { day: "Середа", time: "15:30" },
       ],
       participants: [
         {
@@ -259,8 +259,8 @@ describe("DELETE /groups/:id", () => {
       monthlyPayment: 10000,
 
       schedule: [
-        { day: "Monday", time: "10:00" },
-        { day: "Wednesday", time: "15:30" },
+        { day: "  Понеділок", time: "10:00" },
+        { day: "Середа", time: "15:30" },
       ],
       participants: [
         {

@@ -9,8 +9,8 @@ describe("makeScheduleForNewGroup", () => {
   it("should generate events for a valid schedule", () => {
     debugger
     const schedule = [
-      { day: "Monday", time: "10:00" },
-      { day: "Wednesday", time: "15:30" },
+      { day: "  Понеділок", time: "10:00" },
+      { day: "Середа", time: "15:30" },
     ];
     debugger
     const events = makeScheduleForNewGroup(schedule, currentDate, endOfMonth, title, groupId);
@@ -40,7 +40,7 @@ describe("makeScheduleForNewGroup", () => {
   });
 
   it("should handle overlapping dates correctly", () => {
-    const schedule = [{ day: "Sunday", time: "12:00" }];
+    const schedule = [{ day: "Неділя", time: "12:00" }];
 
     const events = makeScheduleForNewGroup(schedule, currentDate, endOfMonth, title, groupId);
 
@@ -49,7 +49,7 @@ describe("makeScheduleForNewGroup", () => {
   });
 
   it("should correctly parse time and set hours and minutes", () => {
-    const schedule = [{ day: "Tuesday", time: "09:45" }];
+    const schedule = [{ day: "Вівторок", time: "09:45" }];
 
     const events = makeScheduleForNewGroup(schedule, currentDate, endOfMonth, title, groupId);
     const eventDate = new Date(events[0].date);
@@ -60,16 +60,16 @@ describe("makeScheduleForNewGroup", () => {
 
   it("should generate events for multiple days of the week", () => {
     const schedule = [
-      { day: "Monday", time: "10:00" },
-      { day: "Friday", time: "18:00" },
+      { day: "  Понеділок", time: "10:00" },
+      { day: "П'ятниця", time: "18:00" },
     ];
 
     const events = makeScheduleForNewGroup(schedule, currentDate, endOfMonth, title, groupId);
 console.log(events)
-    const mondayEvents = events.filter((e) => new Date(e.date).getUTCDay() === 1); // Monday is 1
-    const fridayEvents = events.filter((e) => new Date(e.date).getUTCDay() === 5); // Friday is 5
+    const   ПонеділокEvents = events.filter((e) => new Date(e.date).getUTCDay() === 1); //   Понеділок is 1
+    const П'ятницяEvents = events.filter((e) => new Date(e.date).getUTCDay() === 5); // П'ятниця is 5
 
-    expect(mondayEvents.length).toBeGreaterThan(0);
-    expect(fridayEvents.length).toBeGreaterThan(0);
+    expect(  ПонеділокEvents.length).toBeGreaterThan(0);
+    expect(П'ятницяEvents.length).toBeGreaterThan(0);
   });
 });

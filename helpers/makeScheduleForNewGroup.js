@@ -3,9 +3,17 @@ const makeScheduleForNewGroup = (scheduleFromGroup, currentDate, endOfMonth, tit
     const events = [];
     debugger
     scheduleFromGroup.forEach(({ day, time }) => {
-      const dayIndex = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].indexOf(day);
+      const dayIndex =[
+        "Понеділок",
+        "Вівторок",
+        "Середа",
+        "Четвер",
+        "П'ятниця",
+        "Субота",
+        "Неділя",
+      ].indexOf(day);
       if (dayIndex === -1) return;
-      debugger
+
       let date = new Date(currentDate);
       date.setUTCDate(date.getUTCDate() + ((dayIndex - date.getUTCDay() + 7) % 7)); // Устанавливаем правильный день недели
       debugger

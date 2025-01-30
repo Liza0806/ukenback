@@ -37,7 +37,7 @@ describe("validateData", () => {
       coachId: "603fbebe23e6d004b50a4887",
       dailyPayment: 100, 
       monthlyPayment: 300,
-      schedule: [{ day: "Monday", time: "18:00" }],
+      schedule: [{ day: "  Понеділок", time: "18:00" }],
       participants: [],
     };
 
@@ -71,7 +71,7 @@ describe("isValidGroupData", () => {
       coachId: "603fbebe23e6d004b50a4887",
        dailyPayment: 100, 
        monthlyPayment: 300 ,
-      schedule: [{ day: "Monday", time: "18:00" }],
+      schedule: [{ day: "  Понеділок", time: "18:00" }],
       participants: [],
     };
 

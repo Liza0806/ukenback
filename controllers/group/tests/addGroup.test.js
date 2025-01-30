@@ -41,8 +41,8 @@ const mockData = {
   dailyPayment: 0,  
   monthlyPayment:0,
   schedule: [
-    { day: "Monday", time: "10:00" },
-    { day: "Wednesday", time: "15:30" },
+    { day: "  Понеділок", time: "10:00" },
+    { day: "Середа", time: "15:30" },
   ],
   participants: [],
 };
@@ -52,8 +52,8 @@ const mockDataPart = {
   dailyPayment: 0,  
   monthlyPayment:0,
   schedule: [
-    { day: "Monday", time: "10:00" },
-    { day: "Wednesday", time: "15:30" },
+    { day: "  Понеділок", time: "10:00" },
+    { day: "Середа", time: "15:30" },
   ],
   participants: [],
 };
@@ -100,8 +100,8 @@ describe("addGroup Controller", () => {
     //     },
     //   ],
     //   schedule: [
-    //     { day: "Monday", time: "10:00" },
-    //     { day: "Wednesday", time: "12:00" },
+    //     { day: "  Понеділок", time: "10:00" },
+    //     { day: "Середа", time: "12:00" },
     //   ],
     //   participants: [],
     // };

@@ -18,7 +18,7 @@ describe("isGroupScheduleSuitable", () => {
 
   it("should return null if the schedule is suitable", async () => {
     Group.exec.mockResolvedValueOnce([]); // Mock an empty result indicating no existing groups
-    const schedule = [{ day: "Monday", time: "18:00" }];
+    const schedule = [{ day: "  Понеділок", time: "18:00" }];
     const result = await isGroupScheduleSuitable(schedule);
     expect(result).toBe(null);
   });
@@ -26,21 +26,21 @@ describe("isGroupScheduleSuitable", () => {
   it("should return conflict message if there is a schedule conflict", async () => {
     const existingGroup = {
       title: "Existing Group",
-      schedule: [{ day: "Monday", time: "18:00" }],
+      schedule: [{ day: "  Понеділок", time: "18:00" }],
     };
     Group.exec.mockResolvedValue([existingGroup]); // Mock an existing group with a conflicting schedule
-    const schedule = [{ day: "Monday", time: "18:00" }];
+    const schedule = [{ day: "  Понеділок", time: "18:00" }];
 
     const result = await isGroupScheduleSuitable(schedule);
 
     expect(result).toBe(
-      `Conflict detected: {"day":"Monday","time":"18:00"} exists in group 'Existing Group'`
+      `Conflict detected: {"day":"  Понеділок","time":"18:00"} exists in group 'Existing Group'`
     );
   });
 
   it("should throw an error on failure", async () => {
     Group.exec.mockRejectedValue("Database error"); // Simulate a database error
-    const schedule = [{ day: "Monday", time: "18:00" }];
+    const schedule = [{ day: "  Понеділок", time: "18:00" }];
 
     await expect(isGroupScheduleSuitable(schedule)).rejects.toThrow(
       "Error checking schedule suitability"

@@ -32,8 +32,8 @@ describe("updateGroup Controller", () => {
       },
     ],
     schedule: [
-      { day: "Monday", time: "10:00" },
-      { day: "Wednesday", time: "12:00" },
+      { day: "  Понеділок", time: "10:00" },
+      { day: "Середа", time: "12:00" },
     ],
     participants: [],
   };
