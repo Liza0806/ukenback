@@ -121,42 +121,56 @@ const currentDate = new Date();
     return res.status(500).json({ message: "Server error" });
   }
 };
-
 const updateGroup = async (req, res) => {
-  // console.log(req.body, "updateGroup1");
   try {
     const { id } = req.params;
     const updateData = req.body;
     const { title, dailyPayment, monthlyPayment, coachId, schedule, participants } = req.body;
+    
     // Проверка валидности данных
     const isValid = isValidGroupData({
       title,
-      dailyPayment,  
+      dailyPayment,
       monthlyPayment,
       coachId,
       schedule,
       participants,
     });
+    
     if (!isValid) {
       return res.status(400).json({ message: "Invalid group data" });
     }
-    const updatedGroup = await Group.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
 
-    // Если группа не найдена, возвращаем ошибку
+    const updatedGroup = await Group.findByIdAndUpdate(id, updateData, { new: true });
+
     if (!updatedGroup) {
       return res.status(404).json({ message: "Group not found" });
     }
 
-    // Возвращаем обновленные данные группы
-    console.log(updatedGroup, 'updatedGroup')
-    res.status(200).json({ updatedGroup, _id: id });
+    const currentDate = new Date();
+    const eventMessage = await Event.deleteMany({
+      groupTitle: title,
+      date: { $gt: currentDate.toISOString() },
+    });
+
+    // Формирование нового расписания
+    const events = makeScheduleForNewGroup(schedule, currentDate, endOfMonth, title, id.toString());
+
+    // Вставка новых событий
+    if (events.length > 0) {
+      await Event.insertMany(events);
+    }
+
+    res.status(200).json({
+      updatedGroup,
+      _id: id,
+      message: `Group updated. ${eventMessage.deletedCount > 0 ? 'Associated future events successfully deleted' : 'No associated future events found'}`,
+    });
   } catch (err) {
-    // Логируем и возвращаем ошибку
     return res.status(500).json({ message: `Internal Server Error: ${err}` });
   }
 };
+
 
 const deleteGroup = async (req, res) => {
   const { id } = req.params;
