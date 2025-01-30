@@ -120,8 +120,7 @@ const currentDate = new Date();
     console.error("Error adding group:", err);
     return res.status(500).json({ message: "Server error" });
   }
-};
-const updateGroup = async (req, res) => {
+};const updateGroup = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
@@ -147,29 +146,47 @@ const updateGroup = async (req, res) => {
       return res.status(404).json({ message: "Group not found" });
     }
 
-    const currentDate = new Date();
-    const eventMessage = await Event.deleteMany({
-      groupTitle: title,
-      date: { $gt: currentDate.toISOString() },
-    });
+    // Сравнение старого и нового расписания
+    const oldGroup = await Group.findById(id);
+    const oldSchedule = oldGroup.schedule;
 
-    // Формирование нового расписания
-    const events = makeScheduleForNewGroup(schedule, currentDate, endOfMonth, title, id.toString());
+    const isScheduleChanged = JSON.stringify(oldSchedule) !== JSON.stringify(schedule);
 
-    // Вставка новых событий
-    if (events.length > 0) {
-      await Event.insertMany(events);
+    if (isScheduleChanged) {
+      const currentDate = new Date();
+      
+      // Удаление будущих событий, связанных с группой
+      const eventMessage = await Event.deleteMany({
+        groupTitle: title,
+        date: { $gt: currentDate.toISOString() },
+      });
+
+      // Формирование нового расписания
+      const events = makeScheduleForNewGroup(schedule, currentDate, endOfMonth, title, id.toString());
+
+      // Вставка новых событий
+      if (events.length > 0) {
+        await Event.insertMany(events);
+      }
+
+      res.status(200).json({
+        updatedGroup,
+        _id: id,
+        message: `Group updated. ${eventMessage.deletedCount > 0 ? 'Associated future events successfully deleted' : 'No associated future events found'}`,
+      });
+    } else {
+      // Если расписание не изменилось, возвращаем только обновлённую группу
+      res.status(200).json({
+        updatedGroup,
+        _id: id,
+        message: 'Group updated. No changes in the schedule.',
+      });
     }
-
-    res.status(200).json({
-      updatedGroup,
-      _id: id,
-      message: `Group updated. ${eventMessage.deletedCount > 0 ? 'Associated future events successfully deleted' : 'No associated future events found'}`,
-    });
   } catch (err) {
     return res.status(500).json({ message: `Internal Server Error: ${err}` });
   }
 };
+
 
 
 const deleteGroup = async (req, res) => {
