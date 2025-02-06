@@ -45,6 +45,13 @@ debugger
       .json({ message: `Error getting group: ${error.message}` });
   }
 };
+
+
+
+
+
+
+
 const addGroup = async (req, res) => {
   const { title, coachId, dailyPayment,  monthlyPayment, schedule, participants } = req.body;
 
@@ -86,6 +93,7 @@ const addGroup = async (req, res) => {
 debugger
    console.log(group, 'group in 80 group ctrl')
 const currentDate = new Date();
+console.log(currentDate, '-currentDate////////////////////////////////')
     const endOfMonth = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth() + 1,
@@ -120,12 +128,19 @@ const currentDate = new Date();
     console.error("Error adding group:", err);
     return res.status(500).json({ message: "Server error" });
   }
+
+
+
+
+
+
+
 };const updateGroup = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
     const { title, dailyPayment, monthlyPayment, coachId, schedule, participants } = req.body;
-    
+    const oldGroup = await Group.findById(id);
     // Проверка валидности данных
     const isValid = isValidGroupData({
       title,
@@ -137,22 +152,29 @@ const currentDate = new Date();
     });
     
     if (!isValid) {
+      console.log('if (!isValid) 155')
       return res.status(400).json({ message: "Invalid group data" });
     }
 
     const updatedGroup = await Group.findByIdAndUpdate(id, updateData, { new: true });
-
+console.log(updateData, '-updatedGroup 160')
     if (!updatedGroup) {
+      console.log(updateData, '(!updatedGroup) 162')
       return res.status(404).json({ message: "Group not found" });
     }
 
     // Сравнение старого и нового расписания
-    const oldGroup = await Group.findById(id);
+  
     const oldSchedule = oldGroup.schedule;
+console.log(oldGroup.schedule, schedule, 'oldGroup.schedule, schedule,')
+    const isScheduleChanged = oldSchedule.length !== schedule.length || 
+    oldSchedule.some((oldItem, index) => 
+      oldItem.day !== schedule[index]?.day || oldItem.time !== schedule[index]?.time
+    );
 
-    const isScheduleChanged = JSON.stringify(oldSchedule) !== JSON.stringify(schedule);
 console.log(isScheduleChanged, 'isScheduleChanged')
     if (isScheduleChanged) {
+      console.log(' if (isScheduleChanged) { 177')
       const currentDate = new Date();
       console.log(currentDate, 'currentDate')
       // Удаление будущих событий, связанных с группой
@@ -160,13 +182,18 @@ console.log(isScheduleChanged, 'isScheduleChanged')
         groupTitle: title,
         date: { $gt: currentDate.toISOString() },
       });
-console.log(eventMessage, 'eventMessage')
+console.log(eventMessage, 'eventMessage 185')
       // Формирование нового расписания
+      const endOfMonth = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        0
+      );
       const events = makeScheduleForNewGroup(schedule, currentDate, endOfMonth, title, id.toString());
-console.log(events, 'events')
+console.log(events, 'events 188')
       // Вставка новых событий
       if (events.length > 0) {
-        console.log(' if (events.length > 0) {')
+        console.log(' if (events.length > 0) { 191')
         await Event.insertMany(events);
       }
 
@@ -184,7 +211,7 @@ console.log(events, 'events')
       });
     }
   } catch (err) {
-    console.log('  } catch (err) {')
+    console.log(err, 'err -  } catch (err) {')
     return res.status(500).json({ message: `Internal Server Error: ${err}` });
   }
 };
