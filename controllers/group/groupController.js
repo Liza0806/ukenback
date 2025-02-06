@@ -151,21 +151,22 @@ const currentDate = new Date();
     const oldSchedule = oldGroup.schedule;
 
     const isScheduleChanged = JSON.stringify(oldSchedule) !== JSON.stringify(schedule);
-
+console.log(isScheduleChanged, 'isScheduleChanged')
     if (isScheduleChanged) {
       const currentDate = new Date();
-      
+      console.log(currentDate, 'currentDate')
       // Удаление будущих событий, связанных с группой
       const eventMessage = await Event.deleteMany({
         groupTitle: title,
         date: { $gt: currentDate.toISOString() },
       });
-
+console.log(eventMessage, 'eventMessage')
       // Формирование нового расписания
       const events = makeScheduleForNewGroup(schedule, currentDate, endOfMonth, title, id.toString());
-
+console.log(events, 'events')
       // Вставка новых событий
       if (events.length > 0) {
+        console.log(' if (events.length > 0) {')
         await Event.insertMany(events);
       }
 
@@ -183,6 +184,7 @@ const currentDate = new Date();
       });
     }
   } catch (err) {
+    console.log('  } catch (err) {')
     return res.status(500).json({ message: `Internal Server Error: ${err}` });
   }
 };
