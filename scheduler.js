@@ -111,8 +111,40 @@ async function createEventsForNextMonth() {
     console.error("Ошибка при создании событий:", error);
   }
 }
+const updateUserActivity = async () => {
+  try {
+    const currentDate = new Date();
+    const oneMonthAgo = new Date(currentDate.setMonth(currentDate.getMonth() - 1));
+
+    // Найдем пользователей, которые не были проверены в последние 7 дней
+    const users = await User.find({
+      "visits.date": { $lt: oneMonthAgo.toISOString() },  
+    });
+
+    for (const user of users) {
+      // Проверим последний визит пользователя
+      const lastVisitDate = user.visits.reduce((latest, visit) => 
+        new Date(visit.date) > latest ? new Date(visit.date) : latest, new Date(0));
+
+      if (lastVisitDate < oneMonthAgo) {
+        user.isActive = false;  // Устанавливаем isActive в false, если визит был более месяца назад
+      } else {
+        user.isActive = true;  
+      }
+
+     await Promise.all(users.map(user => user.save()));
+    }
+
+    console.log("Обновление активности пользователей завершено.");
+  } catch (error) {
+    console.error("Ошибка при обновлении активности пользователей: ", error);
+  }
+};
+// Запускать каждое воскресенье в полночь
+cron.schedule('0 0 * * 0', updateUserActivity);  
 
 // Export the function
 module.exports = {
   createEventsForNextMonth,
+  updateUserActivity
 };

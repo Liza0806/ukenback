@@ -10,16 +10,17 @@ mongoose.connect(DB_HOST).then(() => {
   process.exit(1);
 });
 createEventsForNextMonth();
+
 module.exports = (req, res) => {
   console.log(`Request received: ${req.method} ${req.url}`);
   app(req, res);  // Передаем запрос и ответ в Express приложение
 };
 
 
-// ///////////////////////////////////////////////////////////////////////////////////
-// const PORT = process.env.PORT || 3001;
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
+///////////////////////////////////////////////////////////////////////////////////
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 

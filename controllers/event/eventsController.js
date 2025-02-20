@@ -97,12 +97,12 @@ const getEventsByGroup = async (req, res) => {
 
 // создать
 const createEvent = async (req, res) => {
-  debugger
+ // debugger
   const { date, groupId, isCancelled, groupTitle, participants } = req.body;
   const event = { date, groupId, groupTitle, isCancelled, participants };
-  debugger
+ // debugger
   if (!date || !groupId || isCancelled === undefined || !participants) {
-    debugger
+   // debugger
     return res.status(400).json({
       message:
         "Bad Request: Missing required fields (date, group, isCancelled, participants)",
@@ -122,16 +122,16 @@ const createEvent = async (req, res) => {
       isCancelled: validatedData.isCancelled,
       participants: validatedData.participants,
     });
-    debugger
+   // debugger
     
     const savedEvent = await newEvent.save(); // Save the event to the database
 console.log(savedEvent, 'savedEvent')
-    debugger
+   // debugger
     // Return the event with its ID
     return res.status(201).json(savedEvent);
   } catch (error) {
     if (error.message.startsWith("Validation error")) {
-      debugger
+     // debugger
       return res.status(400).json({ message: error.message });
     }
 
