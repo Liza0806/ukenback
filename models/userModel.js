@@ -36,9 +36,9 @@ const userSchema = new Schema(
       required: false,
     },
     isActive: {
-      type: Joi.boolean,
+      type: Boolean,
       required: false,
-      default: true
+      default: true,
     },
   },
   { versionKey: false, timestamps: true }
