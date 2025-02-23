@@ -10,14 +10,14 @@ const swaggerUiDist = require('swagger-ui-dist');
 const userRouter = require("./routes/user");
 const groupRouter = require("./routes/group");
 const eventsRouter = require("./routes/events");
-const paymentRoutes = require("./routes/payments");
+const paymentRouter = require("./routes/payments");
 
 const app = express();
 const path = require("path");
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
 const corsOptions = {
-  origin: ["https://uken.netlify.app", "http://localhost:3001"], // разрешённые домены
+  origin: ["https://uken.netlify.app", "http://localhost:3001", "http://localhost:3001"], // разрешённые домены
   optionsSuccessStatus: 200,
 };
 
@@ -55,7 +55,8 @@ app.get("/", (req, res) => {
 app.use("/users/", userRouter);
 app.use("/groups/", groupRouter);
 app.use("/events/", eventsRouter);
-app.use("/api/payment/", paymentRoutes);
+// app.use("/payments/", paymentRouter);
+app.use("/api/payments/", paymentRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });

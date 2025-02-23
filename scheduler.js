@@ -1,5 +1,6 @@
 const cron = require('node-cron');
 const { Group } = require('./models/groupModel'); 
+const { User } = require('./models/userModel'); 
 const { Event } = require('./models/eventModel'); 
 const moment = require('moment');
 require('moment/locale/uk'); // Импорт локали

@@ -40,6 +40,14 @@ const userSchema = new Schema(
       required: false,
       default: true,
     },
+    createdAt: {
+      type: Date,
+      required: false,
+    },
+    updatedAt: {
+      type: Date,
+      required: false,
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -60,6 +68,7 @@ const registerSchema = Joi.object({
   isAdmin: Joi.boolean().default(false),
   visits: Joi.array().default([]),
   isActive: Joi.boolean().default(true),
+  createdAt: Joi.date().optional(),
 });
 const updateSchema = Joi.object({
   _id: Joi.string(),
@@ -70,9 +79,11 @@ const updateSchema = Joi.object({
   isAdmin: Joi.boolean(),
   balance: Joi.number(),
   visits: Joi.array(),
-  password: Joi.string().min(6), 
+  password: Joi.string().min(6),
   discount: Joi.number(),
   isActive: Joi.boolean().default(true),
+  createdAt: Joi.date().optional(),
+  updatedAt: Joi.date().optional(),
 });
 
 const loginSchema = Joi.object({
@@ -92,4 +103,3 @@ module.exports = {
   User,
   schemas,
 };
-
