@@ -2,7 +2,7 @@ const { Event, schemas } = require("../../models/eventModel");
 const { validateData } = require("../../helpers/validators");
 const { HttpError } = require("../../helpers/HttpError");
 const { nanoid } = require("nanoid");
-
+const moment = require('moment');
 // получить все тренировки из всех групп
 const getAllEvents = async (req, res) => {
   try {
