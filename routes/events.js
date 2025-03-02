@@ -16,7 +16,18 @@ const {schemas} = require('../models/eventModel')
  *         description: Ошибка сервера
  */
 router.get('/', controllers.getAllEvents);
-
+/**
+ * @swagger
+ * /events:
+ *   get:
+ *     summary: Получить все будущие события
+ *     responses:
+ *       200:
+ *         description: Список всех предстоящих событий
+ *       500:
+ *         description: Ошибка сервера
+ */
+router.get('/future', controllers.getFutureEvents)
 /**
  * @swagger
  * /events/{eventId}:

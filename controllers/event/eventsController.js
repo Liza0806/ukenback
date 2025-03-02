@@ -14,6 +14,23 @@ const getAllEvents = async (req, res) => {
   }
 };
 
+// получаем все БУДУЩИЕ тренировки
+const getFutureEvents = async (req, res) => {
+  try {
+    // Получаем текущую дату
+    const now = moment();
+
+    // Ищем события, где дата больше текущей
+    const data = await Event.find({
+      date: { $gte: now.toDate() }, // $gte — события после текущей даты
+    }).sort({ date: 1 }); // Сортируем по дате в порядке возрастания
+
+    res.json(data); // Статус 200 по умолчанию
+  } catch (error) {
+    console.error(error, 'Error fetching future events');
+    res.status(500).json({ message: `Error getting events: ${error.message}` });
+  }
+};
 // получить по ид
 const getEventById = async (req, res) => {
   const { eventId } = req.params;
@@ -242,6 +259,7 @@ const deleteEvent = async (req, res) => {
 
 module.exports = {
   getAllEvents,
+  getFutureEvents,
   getEventById,
   getEventsByDate,
   getEventsByGroup,
